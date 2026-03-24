@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import InfoBubble from '../components/InfoBubble';
 
 interface Props {
@@ -20,10 +20,14 @@ const PLATFORM_META: Record<string, { icon: string; label: string }> = {
 export default function ComposerView({ platforms }: Props) {
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [posting, setPosting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState('');
   const [broadcastAll, setBroadcastAll] = useState(true);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const togglePlatform = (p: string) => {
     setBroadcastAll(false);
@@ -37,16 +41,85 @@ export default function ComposerView({ platforms }: Props) {
     setSelectedPlatforms([]);
   };
 
+  // ─── Image Upload ──────────────────────────────────────────
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setResult('✗ Only image files are supported');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setResult('✗ Image must be under 10MB');
+      return;
+    }
+
+    // Show local preview immediately
+    const localUrl = URL.createObjectURL(file);
+    setImagePreview(localUrl);
+    setUploading(true);
+    setResult('');
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        setImageUrl(data.url);
+        setImagePreview(data.url);
+        setResult(`✓ Image uploaded (${(file.size / 1024).toFixed(0)}KB)`);
+      } else {
+        setResult(`✗ Upload failed: ${data.error}`);
+        setImagePreview('');
+      }
+    } catch (err) {
+      setResult(`✗ Upload error: ${err}`);
+      setImagePreview('');
+    }
+    setUploading(false);
+  };
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadFile(file);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  }, []);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+  };
+
+  const removeImage = () => {
+    setImageUrl('');
+    setImagePreview('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // ─── Post ─────────────────────────────────────────────────
   const handlePost = async () => {
     if (!content.trim()) return;
     setPosting(true);
     setResult('');
     try {
+      const payload = { content, imageUrl: imageUrl || undefined };
       if (broadcastAll) {
         const res = await fetch('/api/broadcast', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content, imageUrl: imageUrl || undefined }),
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         });
         const data = await res.json();
         const total = Object.keys(data.results || {}).length;
@@ -54,17 +127,15 @@ export default function ComposerView({ platforms }: Props) {
         setResult(`✓ Broadcast complete — ${successes}/${total} succeeded`);
       } else if (selectedPlatforms.length === 1) {
         const res = await fetch('/api/post', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ platform: selectedPlatforms[0], content, imageUrl: imageUrl || undefined }),
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform: selectedPlatforms[0], ...payload }),
         });
         const data = await res.json();
         setResult(data.success ? `✓ Posted to ${selectedPlatforms[0]}` : `✗ ${data.error}`);
       } else {
         const res = await fetch('/api/broadcast', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content, imageUrl: imageUrl || undefined, platforms: selectedPlatforms }),
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, platforms: selectedPlatforms }),
         });
         const data = await res.json();
         const total = Object.keys(data.results || {}).length;
@@ -73,6 +144,7 @@ export default function ComposerView({ platforms }: Props) {
       }
       setContent('');
       setImageUrl('');
+      setImagePreview('');
     } catch (err) {
       setResult(`✗ Error: ${err}`);
     }
@@ -114,7 +186,7 @@ export default function ComposerView({ platforms }: Props) {
                   <ul>
                     <li>Keep it under 280 characters for X/Twitter compatibility</li>
                     <li>Use engaging hooks in the first line — it's what people see first</li>
-                    <li>Add an image URL for visual posts (required for Instagram and Pinterest)</li>
+                    <li><strong>Drag & drop an image</strong> or click the upload zone to attach visuals</li>
                     <li>Include a call-to-action or link at the end</li>
                   </ul>
                   <p><strong>Broadcast All</strong> sends to every connected platform. Or select specific platforms using the toggle chips below.</p>
@@ -135,25 +207,68 @@ export default function ComposerView({ platforms }: Props) {
                 <InfoBubble
                   title="Character Count"
                   content={<>
-                    <p>The character counter tracks your post length against <strong>X/Twitter's 280-character limit</strong>.</p>
+                    <p>Tracks your post length against <strong>X/Twitter's 280-character limit</strong>.</p>
                     <ul>
-                      <li><strong>White</strong> — Under limit, you're good</li>
+                      <li><strong>White</strong> — Under limit</li>
                       <li><strong>Orange</strong> — Approaching limit (20 chars remaining)</li>
-                      <li><strong>Red</strong> — Over limit; will be truncated on X/Twitter</li>
+                      <li><strong>Red</strong> — Over limit; truncated on X/Twitter</li>
                     </ul>
-                    <p>Other platforms like Facebook and LinkedIn allow much longer posts, so exceeding 280 only affects X/Twitter.</p>
+                    <p>Facebook and LinkedIn allow much longer posts.</p>
                   </>}
                 />
               </span>
             </div>
 
+            {/* ─── Drag & Drop Image Zone ────────────────── */}
+            <div
+              className={`drop-zone ${dragActive ? 'drag-active' : ''} ${imagePreview ? 'has-image' : ''}`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={() => !imagePreview && fileInputRef.current?.click()}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+
+              {uploading ? (
+                <div className="drop-zone-content">
+                  <span className="drop-zone-icon" style={{ animation: 'pulse-glow 1s infinite alternate' }}>⏳</span>
+                  <span className="drop-zone-label">Uploading...</span>
+                </div>
+              ) : imagePreview ? (
+                <div className="drop-zone-preview">
+                  <img src={imagePreview} alt="Attached" />
+                  <div className="drop-zone-preview-overlay">
+                    <button className="btn btn-secondary" onClick={(e) => { e.stopPropagation(); removeImage(); }} style={{ padding: '4px 12px', fontSize: '0.7rem' }}>
+                      ✕ Remove
+                    </button>
+                    <button className="btn btn-secondary" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }} style={{ padding: '4px 12px', fontSize: '0.7rem' }}>
+                      🔄 Replace
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="drop-zone-content">
+                  <span className="drop-zone-icon">🖼️</span>
+                  <span className="drop-zone-label">Drag & drop an image here</span>
+                  <span className="drop-zone-sub">or click to browse  •  PNG, JPG, GIF, WebP  •  10MB max</span>
+                </div>
+              )}
+            </div>
+
+            {/* Manual URL fallback */}
             <input
               type="text"
               value={imageUrl}
-              onChange={e => setImageUrl(e.target.value)}
-              placeholder="Image URL (optional)"
-              className="composer-textarea mt-16"
-              style={{ minHeight: 42, fontSize: '0.8rem' }}
+              onChange={e => { setImageUrl(e.target.value); setImagePreview(e.target.value); }}
+              placeholder="Or paste an image URL"
+              className="composer-textarea mt-8"
+              style={{ minHeight: 38, fontSize: '0.75rem', opacity: 0.7 }}
             />
 
             <div className="mt-16">
@@ -164,11 +279,11 @@ export default function ComposerView({ platforms }: Props) {
                   content={<>
                     <p>Choose where your post will be published:</p>
                     <ul>
-                      <li><strong>All Platforms</strong> — Broadcasts to every connected platform simultaneously</li>
-                      <li><strong>Individual selection</strong> — Click specific platform chips to target them only</li>
+                      <li><strong>All Platforms</strong> — Broadcasts to every connected platform</li>
+                      <li><strong>Individual selection</strong> — Click specific chips to target them</li>
                     </ul>
-                    <p>Only <strong>connected platforms</strong> (those with valid API keys) appear here. Configure more in the <strong>Platforms</strong> tab.</p>
-                    <p><strong>Note:</strong> Instagram and Pinterest require an image URL to post. If no image is provided, those platforms will be skipped in a broadcast.</p>
+                    <p>Only <strong>connected platforms</strong> appear here. Configure more in <strong>Setup</strong>.</p>
+                    <p><strong>Note:</strong> Instagram and Pinterest require an image. If no image is provided, those platforms will be skipped.</p>
                   </>}
                 />
               </p>
@@ -219,14 +334,13 @@ export default function ComposerView({ platforms }: Props) {
               <InfoBubble
                 title="Post Preview"
                 content={<>
-                  <p>This panel shows a <strong>live preview</strong> of how your post will look when published.</p>
-                  <p>The preview updates in real-time as you type. It shows:</p>
+                  <p>Live preview of how your post will look when published.</p>
                   <ul>
-                    <li>Your post text with proper formatting</li>
-                    <li>Image preview if an image URL is provided</li>
-                    <li>Which platforms will receive the post</li>
+                    <li>Post text with proper formatting</li>
+                    <li>Attached image preview</li>
+                    <li>Target platform indicators</li>
                   </ul>
-                  <p><strong>Note:</strong> Actual appearance varies by platform. This preview gives a general sense of the content.</p>
+                  <p><strong>Note:</strong> Actual appearance varies by platform.</p>
                 </>}
               />
             </span>
@@ -249,15 +363,15 @@ export default function ComposerView({ platforms }: Props) {
                   </div>
                 </div>
                 <p className="text-sm" style={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{content}</p>
-                {imageUrl && (
+                {(imagePreview || imageUrl) && (
                   <div style={{
                     marginTop: 12, borderRadius: 'var(--radius-md)', overflow: 'hidden',
                     border: '1px solid var(--void-border)',
                   }}>
                     <img
-                      src={imageUrl}
+                      src={imagePreview || imageUrl}
                       alt="Post preview"
-                      style={{ width: '100%', display: 'block', maxHeight: 200, objectFit: 'cover' }}
+                      style={{ width: '100%', display: 'block', maxHeight: 220, objectFit: 'cover' }}
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />
                   </div>

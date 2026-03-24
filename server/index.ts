@@ -9,7 +9,9 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 import { db } from './db.js';
 import {
   marketingPosts, marketingDeploys, marketingScheduleConfigs,
@@ -28,6 +30,29 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 
+// ─── File Upload Config ─────────────────────────────────────
+const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadsDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname) || '.png';
+    cb(null, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only images allowed'));
+  },
+});
+
+// Serve uploaded images
+app.use('/uploads', express.static(uploadsDir));
+
 // Stripe webhook needs raw body — MUST come before express.json()
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
@@ -38,7 +63,14 @@ app.use('/api/stripe', stripeRouter);
 
 // ─── Health ─────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'signalcast', version: '2.0.0' });
+  res.json({ status: 'ok', service: 'signalcast', version: '2.1.0' });
+});
+
+// ─── Image Upload ───────────────────────────────────────────
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No image provided' });
+  const url = `/uploads/${req.file.filename}`;
+  res.json({ success: true, url, filename: req.file.filename, size: req.file.size });
 });
 
 // ─── Scheduler Status ───────────────────────────────────────
