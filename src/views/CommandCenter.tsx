@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import InfoBubble from '../components/InfoBubble';
+import HeroSlideshow from '../components/HeroSlideshow';
 
 interface Deploy {
   id: string;
@@ -46,16 +47,8 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
 
   return (
     <div className="animate-in">
-      {/* Hero Banner */}
-      <div className="hero-image-card mb-24 animate-in">
-        <img src="/images/hero.png" alt="SignalCast Command Center" />
-        <div className="hero-image-overlay">
-          <div>
-            <div className="hero-image-label">Command Center</div>
-            <div className="hero-image-sublabel">Real-time overview of your social media operations</div>
-          </div>
-        </div>
-      </div>
+      {/* Hero Slideshow */}
+      <HeroSlideshow />
 
       {/* Metric Cards */}
       <div className="bento-grid bento-4 mb-24">
