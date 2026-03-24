@@ -1,11 +1,11 @@
 {
   "name": "signalcast",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "SignalCast — AI-powered social media automation for the Trust Layer ecosystem",
   "type": "module",
   "scripts": {
     "dev": "PORT=3001 tsx watch server/index.ts & vite",
-    "build": "vite build",
+    "build": "npx drizzle-kit push --force && vite build",
     "start": "NODE_ENV=production tsx server/index.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
