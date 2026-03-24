@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import InfoBubble from '../components/InfoBubble';
 
 interface Props {
   platforms: string[];
@@ -48,9 +49,9 @@ export default function ComposerView({ platforms }: Props) {
           body: JSON.stringify({ content, imageUrl: imageUrl || undefined }),
         });
         const data = await res.json();
-        const platforms = Object.keys(data.results || {});
-        const successes = platforms.filter(p => data.results[p]?.success).length;
-        setResult(`✓ Broadcast complete — ${successes}/${platforms.length} succeeded`);
+        const total = Object.keys(data.results || {}).length;
+        const successes = Object.values(data.results || {}).filter((r: any) => r.success).length;
+        setResult(`✓ Broadcast complete — ${successes}/${total} succeeded`);
       } else if (selectedPlatforms.length === 1) {
         const res = await fetch('/api/post', {
           method: 'POST',
@@ -88,11 +89,38 @@ export default function ComposerView({ platforms }: Props) {
         <p className="view-subtitle">Create and broadcast to your connected platforms</p>
       </div>
 
+      {/* Hero */}
+      <div className="hero-image-card mb-24 animate-in">
+        <img src="/images/composer.png" alt="SignalCast Broadcast" />
+        <div className="hero-image-overlay">
+          <div>
+            <div className="hero-image-label">Broadcast Engine</div>
+            <div className="hero-image-sublabel">Write once, publish to 9 platforms simultaneously</div>
+          </div>
+        </div>
+      </div>
+
       <div className="bento-grid bento-2">
         {/* Composer */}
         <div className="glass-panel animate-in animate-in-delay-1">
           <div className="panel-header">
-            <span className="panel-title"><span className="icon">✍️</span> New Post</span>
+            <span className="panel-title">
+              <span className="icon">✍️</span> New Post
+              <InfoBubble
+                title="Post Composer"
+                content={<>
+                  <p>Write your post content here. It will be sent to all selected platforms.</p>
+                  <p><strong>Tips for great posts:</strong></p>
+                  <ul>
+                    <li>Keep it under 280 characters for X/Twitter compatibility</li>
+                    <li>Use engaging hooks in the first line — it's what people see first</li>
+                    <li>Add an image URL for visual posts (required for Instagram and Pinterest)</li>
+                    <li>Include a call-to-action or link at the end</li>
+                  </ul>
+                  <p><strong>Broadcast All</strong> sends to every connected platform. Or select specific platforms using the toggle chips below.</p>
+                </>}
+              />
+            </span>
           </div>
           <div className="panel-body">
             <textarea
@@ -104,6 +132,18 @@ export default function ComposerView({ platforms }: Props) {
             <div className="composer-toolbar">
               <span className={`composer-char-count ${charCount > twitterLimit ? 'over' : charCount > twitterLimit - 20 ? 'warn' : ''}`}>
                 {charCount} / {twitterLimit}
+                <InfoBubble
+                  title="Character Count"
+                  content={<>
+                    <p>The character counter tracks your post length against <strong>X/Twitter's 280-character limit</strong>.</p>
+                    <ul>
+                      <li><strong>White</strong> — Under limit, you're good</li>
+                      <li><strong>Orange</strong> — Approaching limit (20 chars remaining)</li>
+                      <li><strong>Red</strong> — Over limit; will be truncated on X/Twitter</li>
+                    </ul>
+                    <p>Other platforms like Facebook and LinkedIn allow much longer posts, so exceeding 280 only affects X/Twitter.</p>
+                  </>}
+                />
               </span>
             </div>
 
@@ -117,8 +157,20 @@ export default function ComposerView({ platforms }: Props) {
             />
 
             <div className="mt-16">
-              <p className="text-xs font-bold text-muted mb-8" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <p className="text-xs font-bold text-muted mb-8 flex items-center gap-4" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Target Platforms
+                <InfoBubble
+                  title="Platform Targeting"
+                  content={<>
+                    <p>Choose where your post will be published:</p>
+                    <ul>
+                      <li><strong>All Platforms</strong> — Broadcasts to every connected platform simultaneously</li>
+                      <li><strong>Individual selection</strong> — Click specific platform chips to target them only</li>
+                    </ul>
+                    <p>Only <strong>connected platforms</strong> (those with valid API keys) appear here. Configure more in the <strong>Platforms</strong> tab.</p>
+                    <p><strong>Note:</strong> Instagram and Pinterest require an image URL to post. If no image is provided, those platforms will be skipped in a broadcast.</p>
+                  </>}
+                />
               </p>
               <div className="flex gap-8" style={{ flexWrap: 'wrap' }}>
                 <button
@@ -162,7 +214,22 @@ export default function ComposerView({ platforms }: Props) {
         {/* Preview */}
         <div className="glass-panel animate-in animate-in-delay-2">
           <div className="panel-header">
-            <span className="panel-title"><span className="icon">👁️</span> Preview</span>
+            <span className="panel-title">
+              <span className="icon">👁️</span> Preview
+              <InfoBubble
+                title="Post Preview"
+                content={<>
+                  <p>This panel shows a <strong>live preview</strong> of how your post will look when published.</p>
+                  <p>The preview updates in real-time as you type. It shows:</p>
+                  <ul>
+                    <li>Your post text with proper formatting</li>
+                    <li>Image preview if an image URL is provided</li>
+                    <li>Which platforms will receive the post</li>
+                  </ul>
+                  <p><strong>Note:</strong> Actual appearance varies by platform. This preview gives a general sense of the content.</p>
+                </>}
+              />
+            </span>
           </div>
           <div className="panel-body">
             {content.trim() ? (

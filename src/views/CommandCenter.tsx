@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import InfoBubble from '../components/InfoBubble';
 
 interface Deploy {
   id: string;
@@ -34,7 +35,6 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
 
   useEffect(() => {
     fetch('/api/deploys?limit=10').then(r => r.json()).then(setDeploys).catch(() => {});
-    // Aggregate stats from deploys
     fetch('/api/deploys?limit=200').then(r => r.json()).then((all: Deploy[]) => {
       const total = all.length;
       const success = all.filter(d => d.status === 'success').length;
@@ -46,23 +46,74 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
 
   return (
     <div className="animate-in">
-      <div className="view-header">
-        <h1 className="view-title">Command Center</h1>
-        <p className="view-subtitle">Mission control for your social media operations</p>
+      {/* Hero Banner */}
+      <div className="hero-image-card mb-24 animate-in">
+        <img src="/images/hero.png" alt="SignalCast Command Center" />
+        <div className="hero-image-overlay">
+          <div>
+            <div className="hero-image-label">Command Center</div>
+            <div className="hero-image-sublabel">Real-time overview of your social media operations</div>
+          </div>
+        </div>
       </div>
 
       {/* Metric Cards */}
       <div className="bento-grid bento-4 mb-24">
         <div className="glass-panel metric-card animate-in animate-in-delay-1">
-          <span className="metric-label">Total Deploys</span>
+          <div className="flex items-center gap-4">
+            <span className="metric-label">Total Deploys</span>
+            <InfoBubble
+              title="Total Deploys"
+              content={<>
+                <p><strong>What are deploys?</strong> Every time SignalCast sends a post to a social media platform, it creates a "deploy" record. This number shows the total count of all posts sent across all your connected platforms.</p>
+                <p>This includes both successful and failed attempts, giving you a complete picture of your posting activity.</p>
+              </>}
+            />
+          </div>
           <span className="metric-value">{stats?.total ?? '—'}</span>
         </div>
         <div className="glass-panel metric-card animate-in animate-in-delay-2">
-          <span className="metric-label">Platforms Active</span>
+          <div className="flex items-center gap-4">
+            <span className="metric-label">Platforms Active</span>
+            <InfoBubble
+              title="Platforms Active"
+              content={<>
+                <p><strong>Connected platforms</strong> are social media services with valid API credentials configured. SignalCast supports 9 platforms:</p>
+                <ul>
+                  <li>X/Twitter (OAuth 1.0a)</li>
+                  <li>Facebook Pages (Graph API)</li>
+                  <li>Instagram (Meta Container API)</li>
+                  <li>Discord (Webhook)</li>
+                  <li>Telegram (Bot API)</li>
+                  <li>LinkedIn (UGC API)</li>
+                  <li>Reddit (OAuth2)</li>
+                  <li>Pinterest (v5 API)</li>
+                  <li>Nextdoor (Agency API)</li>
+                </ul>
+                <p>Head to the <strong>Platforms</strong> tab to see which are connected and get setup instructions for each.</p>
+              </>}
+            />
+          </div>
           <span className="metric-value">{platforms.length}</span>
         </div>
         <div className="glass-panel metric-card animate-in animate-in-delay-3">
-          <span className="metric-label">Success Rate</span>
+          <div className="flex items-center gap-4">
+            <span className="metric-label">Success Rate</span>
+            <InfoBubble
+              title="Success Rate"
+              content={<>
+                <p><strong>Success rate</strong> measures the percentage of deploy attempts that completed without errors. A healthy rate is <strong>90%+</strong>.</p>
+                <p>Common reasons for failures include:</p>
+                <ul>
+                  <li>Expired API tokens — refresh in platform settings</li>
+                  <li>Rate limiting — posting too frequently to one platform</li>
+                  <li>Content policy violations — check platform-specific rules</li>
+                  <li>Network timeouts — usually resolve automatically</li>
+                </ul>
+                <p>Check the <strong>Analytics</strong> tab for a detailed breakdown by platform.</p>
+              </>}
+            />
+          </div>
           <span className="metric-value">{stats ? `${successRate}%` : '—'}</span>
           {stats && stats.total > 0 && (
             <span className={`metric-trend ${successRate >= 90 ? 'up' : 'down'}`}>
@@ -71,7 +122,17 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
           )}
         </div>
         <div className="glass-panel metric-card animate-in animate-in-delay-4">
-          <span className="metric-label">Tenants</span>
+          <div className="flex items-center gap-4">
+            <span className="metric-label">Tenants</span>
+            <InfoBubble
+              title="Ecosystem Tenants"
+              content={<>
+                <p><strong>Tenants</strong> are the brands or services within the Trust Layer ecosystem that SignalCast automatically posts for.</p>
+                <p>The scheduler rotates through all active tenants on an hourly basis between <strong>6am–10pm CST</strong>, distributing content evenly so each brand gets regular exposure across Facebook, Instagram, and X/Twitter.</p>
+                <p>Each tenant has its own content library of marketing images and posts that rotate automatically.</p>
+              </>}
+            />
+          </div>
           <span className="metric-value">{schedulerStatus?.tenantsCount ?? '—'}</span>
         </div>
       </div>
@@ -81,7 +142,22 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
         {/* Deploy Feed */}
         <div className="glass-panel animate-in animate-in-delay-3">
           <div className="panel-header">
-            <span className="panel-title"><span className="icon">📋</span> Recent Deploys</span>
+            <span className="panel-title">
+              <span className="icon">📋</span> Recent Deploys
+              <InfoBubble
+                title="Deploy Feed"
+                content={<>
+                  <p>This feed shows your <strong>most recent post deployments</strong> in real-time. Each entry represents a post sent to a specific platform.</p>
+                  <p><strong>Status codes:</strong></p>
+                  <ul>
+                    <li><strong>Success</strong> — Post was published and is live</li>
+                    <li><strong>Failed</strong> — Something went wrong; check error details in Analytics</li>
+                    <li><strong>Pending</strong> — Post is queued and will be sent shortly</li>
+                  </ul>
+                  <p>The feed auto-updates. Use the <strong>Analytics</strong> tab for filtering and full history.</p>
+                </>}
+              />
+            </span>
             <span className="panel-subtitle">{deploys.length} latest</span>
           </div>
           <div className="panel-body flex flex-col gap-8">
@@ -115,10 +191,26 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
         {/* Platform Health Grid */}
         <div className="glass-panel animate-in animate-in-delay-4">
           <div className="panel-header">
-            <span className="panel-title"><span className="icon">⚡</span> Platform Health</span>
+            <span className="panel-title">
+              <span className="icon">⚡</span> Platform Health
+              <InfoBubble
+                title="Platform Health"
+                content={<>
+                  <p>This grid shows the <strong>connection status</strong> of all 9 supported platforms at a glance.</p>
+                  <ul>
+                    <li><strong>Live</strong> (cyan glow) — API credentials are configured and active</li>
+                    <li><strong>Off</strong> (dimmed) — Platform needs API keys configured in your environment</li>
+                  </ul>
+                  <p>Click any platform in the <strong>Platforms</strong> tab to see setup instructions and required environment variables.</p>
+                </>}
+              />
+            </span>
             <span className="panel-subtitle">{platforms.length}/9 connected</span>
           </div>
           <div className="panel-body">
+            <div className="section-image">
+              <img src="/images/platforms.png" alt="Platform network" />
+            </div>
             <div className="bento-grid bento-3" style={{ gap: 8 }}>
               {ALL_PLATFORMS.map(p => {
                 const meta = PLATFORM_META[p] || { icon: '?', color: '#888' };
@@ -149,6 +241,21 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
         <div className="panel-header">
           <span className="panel-title">
             <span className="icon">🔄</span> Scheduler
+            <InfoBubble
+              title="Automated Scheduler"
+              content={<>
+                <p>The scheduler is SignalCast's <strong>autonomous posting engine</strong>. It runs 24/7 on the server with no manual intervention needed.</p>
+                <p><strong>How it works:</strong></p>
+                <ul>
+                  <li>Checks every 60 seconds for pending posting slots</li>
+                  <li>Posts hourly between 6am–10pm CST (17 posts/day)</li>
+                  <li>Rotates through ecosystem tenants so each brand gets regular coverage</li>
+                  <li>Pulls from each tenant's content library (marketing images + posts)</li>
+                  <li>Posts to Facebook, Instagram, and X/Twitter with rate-limit protection</li>
+                </ul>
+                <p>The scheduler respects X/Twitter's aggressive rate limits by capping posts per restart cycle.</p>
+              </>}
+            />
             <span className={`deploy-status ${schedulerStatus?.isRunning ? 'success' : 'failed'}`} style={{ marginLeft: 8 }}>
               {schedulerStatus?.isRunning ? 'RUNNING' : 'STOPPED'}
             </span>
