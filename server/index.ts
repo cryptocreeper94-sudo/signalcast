@@ -19,12 +19,21 @@ import { eq, desc, asc, and, sql } from 'drizzle-orm';
 import { getConnector, getConfiguredPlatforms, type Platform } from './connectors.js';
 import { startScheduler, stopScheduler, getSchedulerStatus } from './scheduler.js';
 
+import { stripeRouter, handleStripeWebhook } from './stripe.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
+
+// Stripe webhook needs raw body — MUST come before express.json()
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
+
 app.use(express.json());
+
+// Mount Stripe routes
+app.use('/api/stripe', stripeRouter);
 
 // ─── Health ─────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
