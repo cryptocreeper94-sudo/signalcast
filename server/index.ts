@@ -23,7 +23,7 @@ import { getConnector, getConfiguredPlatforms, type Platform } from './connector
 import { startScheduler, stopScheduler, getSchedulerStatus } from './scheduler.js';
 
 import { stripeRouter, handleStripeWebhook } from './stripe.js';
-
+import { registerTrustLayerSSO } from './trustLayerSSO.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -60,6 +60,9 @@ app.use(express.json());
 
 // Mount Stripe routes
 app.use('/api/stripe', stripeRouter);
+
+// Trust Layer SSO — "Sign in with Trust Layer" consumer endpoints
+registerTrustLayerSSO(app);
 
 // ─── Health ─────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
