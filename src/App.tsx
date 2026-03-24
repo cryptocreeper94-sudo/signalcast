@@ -7,6 +7,7 @@ import PricingView from './views/PricingView';
 import RulesView from './views/RulesView';
 import TemplatesView from './views/TemplatesView';
 import CampaignsView from './views/CampaignsView';
+import AuroraBackground from './components/AuroraBackground';
 
 type View = 'command' | 'compose' | 'setup' | 'rules' | 'templates' | 'campaigns' | 'analytics' | 'pricing';
 
@@ -37,6 +38,7 @@ export default function App() {
   const [schedulerStatus, setSchedulerStatus] = useState<SchedulerStatus | null>(null);
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/scheduler/status').then(r => r.json()).then(setSchedulerStatus).catch(() => {});
@@ -70,6 +72,9 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      {/* ─── AURORA BACKGROUND ─── */}
+      <AuroraBackground />
+
       {/* ─── SIDEBAR ─── */}
       <nav className="sidebar">
         <div className="sidebar-logo">📡</div>
@@ -126,10 +131,10 @@ export default function App() {
         )}
 
         {/* Content */}
-        <div className="app-content">
-          {view === 'command' && <CommandCenter platforms={platforms} schedulerStatus={schedulerStatus} />}
+        <div className="app-content" key={view}>
+          {view === 'command' && <CommandCenter platforms={platforms} schedulerStatus={schedulerStatus} onNavigate={(v, platform) => { setSelectedPlatform(platform || null); setView(v as any); }} />}
           {view === 'compose' && <ComposerView platforms={platforms} />}
-          {view === 'setup' && <SetupWizard />}
+          {view === 'setup' && <SetupWizard initialPlatform={selectedPlatform} onPlatformOpened={() => setSelectedPlatform(null)} />}
           {view === 'rules' && <RulesView />}
           {view === 'templates' && <TemplatesView />}
           {view === 'campaigns' && <CampaignsView />}

@@ -14,6 +14,7 @@ interface Deploy {
 interface Props {
   platforms: string[];
   schedulerStatus: { isRunning: boolean; tenantsCount: number; tenants: string[] } | null;
+  onNavigate?: (view: string, platform?: string) => void;
 }
 
 const PLATFORM_META: Record<string, { icon: string; color: string }> = {
@@ -30,7 +31,7 @@ const PLATFORM_META: Record<string, { icon: string; color: string }> = {
 
 const ALL_PLATFORMS = ['twitter', 'discord', 'telegram', 'facebook', 'instagram', 'nextdoor', 'linkedin', 'reddit', 'pinterest'];
 
-export default function CommandCenter({ platforms, schedulerStatus }: Props) {
+export default function CommandCenter({ platforms, schedulerStatus, onNavigate }: Props) {
   const [deploys, setDeploys] = useState<Deploy[]>([]);
   const [stats, setStats] = useState<{ total: number; success: number; failed: number } | null>(null);
 
@@ -46,13 +47,13 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
   const successRate = stats ? (stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0) : 0;
 
   return (
-    <div className="animate-in">
+    <div className="entrance-stagger">
       {/* Hero Slideshow */}
       <HeroSlideshow />
 
       {/* Metric Cards */}
       <div className="bento-grid bento-4 mb-24">
-        <div className="glass-panel metric-card animate-in animate-in-delay-1">
+        <div className="glass-panel metric-card entrance-stagger entrance-stagger-1 hover-lift">
           <div className="flex items-center gap-4">
             <span className="metric-label">Total Deploys</span>
             <InfoBubble
@@ -63,9 +64,9 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
               </>}
             />
           </div>
-          <span className="metric-value">{stats?.total ?? '—'}</span>
+          <span className="metric-value shimmer-text">{stats?.total ?? '—'}</span>
         </div>
-        <div className="glass-panel metric-card animate-in animate-in-delay-2">
+        <div className="glass-panel metric-card entrance-stagger entrance-stagger-2 hover-lift">
           <div className="flex items-center gap-4">
             <span className="metric-label">Platforms Active</span>
             <InfoBubble
@@ -87,9 +88,9 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
               </>}
             />
           </div>
-          <span className="metric-value">{platforms.length}</span>
+          <span className="metric-value shimmer-text">{platforms.length}</span>
         </div>
-        <div className="glass-panel metric-card animate-in animate-in-delay-3">
+        <div className="glass-panel metric-card entrance-stagger entrance-stagger-3 hover-lift">
           <div className="flex items-center gap-4">
             <span className="metric-label">Success Rate</span>
             <InfoBubble
@@ -107,14 +108,14 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
               </>}
             />
           </div>
-          <span className="metric-value">{stats ? `${successRate}%` : '—'}</span>
+          <span className="metric-value shimmer-text">{stats ? `${successRate}%` : '—'}</span>
           {stats && stats.total > 0 && (
             <span className={`metric-trend ${successRate >= 90 ? 'up' : 'down'}`}>
               {successRate >= 90 ? '↑' : '↓'} {successRate >= 90 ? 'Healthy' : 'Needs attention'}
             </span>
           )}
         </div>
-        <div className="glass-panel metric-card animate-in animate-in-delay-4">
+        <div className="glass-panel metric-card entrance-stagger entrance-stagger-4 hover-lift">
           <div className="flex items-center gap-4">
             <span className="metric-label">Tenants</span>
             <InfoBubble
@@ -126,14 +127,14 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
               </>}
             />
           </div>
-          <span className="metric-value">{schedulerStatus?.tenantsCount ?? '—'}</span>
+          <span className="metric-value shimmer-text">{schedulerStatus?.tenantsCount ?? '—'}</span>
         </div>
       </div>
 
       {/* Two-column: Deploy Feed + Platform Health */}
       <div className="bento-grid bento-2 mb-24">
         {/* Deploy Feed */}
-        <div className="glass-panel animate-in animate-in-delay-3">
+        <div className="glass-panel entrance-stagger entrance-stagger-3 energy-line">
           <div className="panel-header">
             <span className="panel-title">
               <span className="icon">📋</span> Recent Deploys
@@ -182,7 +183,7 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
         </div>
 
         {/* Platform Health Grid */}
-        <div className="glass-panel animate-in animate-in-delay-4">
+        <div className="glass-panel entrance-stagger entrance-stagger-4 energy-line">
           <div className="panel-header">
             <span className="panel-title">
               <span className="icon">⚡</span> Platform Health
@@ -212,14 +213,16 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
                   <div
                     key={p}
                     className={`platform-card glass-panel ${connected ? 'connected' : 'disconnected'}`}
-                    style={{ padding: 14, borderRadius: 12 }}
+                    style={{ padding: 14, borderRadius: 12, cursor: 'pointer' }}
+                    onClick={() => onNavigate?.('setup', p)}
+                    title={connected ? `${p} is live — click to manage` : `Set up ${p} — click to configure`}
                   >
                     <div className="platform-card-icon" style={{ width: 36, height: 36, fontSize: '1.1rem', borderRadius: 10 }}>
                       {meta.icon}
                     </div>
                     <span className="platform-card-name" style={{ fontSize: '0.7rem' }}>{p}</span>
                     <span className="platform-card-status" style={{ fontSize: '0.55rem' }}>
-                      {connected ? 'Live' : 'Off'}
+                      {connected ? 'Live' : 'Set Up →'}
                     </span>
                   </div>
                 );
@@ -230,7 +233,7 @@ export default function CommandCenter({ platforms, schedulerStatus }: Props) {
       </div>
 
       {/* Scheduler Status */}
-      <div className="glass-panel animate-in animate-in-delay-5">
+      <div className="glass-panel entrance-stagger entrance-stagger-5 energy-line neon-glow">
         <div className="panel-header">
           <span className="panel-title">
             <span className="icon">🔄</span> Scheduler
