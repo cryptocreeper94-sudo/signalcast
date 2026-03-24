@@ -267,3 +267,97 @@ export const contentAnalytics = pgTable("content_analytics", {
 });
 
 export type ContentAnalytic = typeof contentAnalytics.$inferSelect;
+
+// Automation Rules - Per-platform posting rules
+export const automationRules = pgTable("automation_rules", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tenantId: text("tenant_id").notNull(),
+  platform: text("platform").notNull(),
+  frequency: text("frequency").notNull().default("daily"), // hourly, 2x-daily, daily, weekly
+  startHour: integer("start_hour").default(9).notNull(),
+  endHour: integer("end_hour").default(21).notNull(),
+  daysOfWeek: jsonb("days_of_week").default([1,2,3,4,5,6,0]).notNull(), // 0=Sun, 6=Sat
+  rotationMode: text("rotation_mode").default("round-robin").notNull(), // round-robin, random, performance
+  maxPostsPerDay: integer("max_posts_per_day").default(4).notNull(),
+  requireImage: boolean("require_image").default(false).notNull(),
+  hashtagStrategy: text("hashtag_strategy").default("auto"), // auto, manual, none
+  autoHashtags: jsonb("auto_hashtags").default([]),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_automation_rules_tenant").on(table.tenantId),
+  index("idx_automation_rules_platform").on(table.platform),
+]);
+
+export const insertAutomationRuleSchema = createInsertSchema(automationRules).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertAutomationRule = z.infer<typeof insertAutomationRuleSchema>;
+export type AutomationRule = typeof automationRules.$inferSelect;
+
+// Content Templates - Reusable post templates with variables
+export const contentTemplates = pgTable("content_templates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tenantId: text("tenant_id").notNull().default("shared"),
+  name: text("name").notNull(),
+  category: text("category").notNull().default("general"), // restaurant, retail, realestate, saas, health, general
+  platform: text("platform").default("all"), // all, twitter, facebook, instagram, etc.
+  content: text("content").notNull(),
+  shortContent: text("short_content"), // Twitter-optimized (< 280 chars)
+  imagePrompt: text("image_prompt"), // AI image generation prompt
+  hashtagSets: jsonb("hashtag_sets").default([]),
+  variables: jsonb("variables").default([]), // [{name, description, defaultValue}]
+  isActive: boolean("is_active").default(true).notNull(),
+  usageCount: integer("usage_count").default(0).notNull(),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_content_templates_tenant").on(table.tenantId),
+  index("idx_content_templates_category").on(table.category),
+]);
+
+export const insertContentTemplateSchema = createInsertSchema(contentTemplates).omit({ id: true, usageCount: true, lastUsedAt: true, createdAt: true });
+export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
+export type ContentTemplate = typeof contentTemplates.$inferSelect;
+
+// Ad Campaigns - Full campaign management
+export const adCampaigns = pgTable("ad_campaigns", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tenantId: text("tenant_id").notNull(),
+  platform: text("platform").notNull(), // facebook, instagram, twitter, linkedin, pinterest, reddit
+  name: text("name").notNull(),
+  objective: text("objective").notNull().default("awareness"), // awareness, traffic, engagement, conversions, leads
+  status: text("status").notNull().default("draft"), // draft, active, paused, completed, failed
+  dailyBudget: decimal("daily_budget", { precision: 10, scale: 2 }),
+  totalBudget: decimal("total_budget", { precision: 10, scale: 2 }),
+  spent: decimal("spent", { precision: 10, scale: 2 }).default("0"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  targeting: jsonb("targeting").default({}), // {ageMin, ageMax, locations, interests, gender}
+  adContent: text("ad_content").notNull(),
+  adHeadline: text("ad_headline"),
+  imageUrl: text("image_url"),
+  callToAction: text("call_to_action").default("Learn More"),
+  destinationUrl: text("destination_url"),
+  externalCampaignId: text("external_campaign_id"),
+  externalAdSetId: text("external_ad_set_id"),
+  externalAdId: text("external_ad_id"),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  conversions: integer("conversions").default(0),
+  reach: integer("reach").default(0),
+  cpc: decimal("cpc", { precision: 10, scale: 4 }),
+  cpm: decimal("cpm", { precision: 10, scale: 4 }),
+  ctr: decimal("ctr", { precision: 5, scale: 4 }),
+  affiliateCode: text("affiliate_code"),
+  hallmarkId: text("hallmark_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_ad_campaigns_tenant").on(table.tenantId),
+  index("idx_ad_campaigns_platform").on(table.platform),
+  index("idx_ad_campaigns_status").on(table.status),
+]);
+
+export const insertAdCampaignSchema = createInsertSchema(adCampaigns).omit({ id: true, spent: true, impressions: true, clicks: true, conversions: true, reach: true, cpc: true, cpm: true, ctr: true, createdAt: true, updatedAt: true });
+export type InsertAdCampaign = z.infer<typeof insertAdCampaignSchema>;
+export type AdCampaign = typeof adCampaigns.$inferSelect;

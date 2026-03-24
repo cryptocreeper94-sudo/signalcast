@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import CommandCenter from './views/CommandCenter';
 import ComposerView from './views/ComposerView';
-import PlatformsView from './views/PlatformsView';
+import SetupWizard from './views/SetupWizard';
 import AnalyticsView from './views/AnalyticsView';
 import PricingView from './views/PricingView';
+import RulesView from './views/RulesView';
+import TemplatesView from './views/TemplatesView';
+import CampaignsView from './views/CampaignsView';
 
-type View = 'command' | 'compose' | 'platforms' | 'analytics' | 'pricing';
+type View = 'command' | 'compose' | 'setup' | 'rules' | 'templates' | 'campaigns' | 'analytics' | 'pricing';
 
 interface SchedulerStatus {
   isRunning: boolean;
@@ -13,11 +16,14 @@ interface SchedulerStatus {
   tenants: string[];
 }
 
-const NAV_ITEMS: { id: View; icon: string; label: string }[] = [
+const NAV_ITEMS: { id: View; icon: string; label: string; section?: string }[] = [
   { id: 'command', icon: '◉', label: 'Command Center' },
   { id: 'compose', icon: '✍', label: 'Compose' },
-  { id: 'platforms', icon: '⚡', label: 'Platforms' },
-  { id: 'analytics', icon: '📊', label: 'Analytics' },
+  { id: 'setup', icon: '🔌', label: 'Setup', section: 'divider' },
+  { id: 'rules', icon: '⚙', label: 'Rules' },
+  { id: 'templates', icon: '📄', label: 'Templates' },
+  { id: 'campaigns', icon: '📢', label: 'Campaigns' },
+  { id: 'analytics', icon: '📊', label: 'Analytics', section: 'divider' },
   { id: 'pricing', icon: '💎', label: 'Pricing' },
 ];
 
@@ -68,19 +74,23 @@ export default function App() {
       <nav className="sidebar">
         <div className="sidebar-logo">📡</div>
         <div className="sidebar-nav">
-          {NAV_ITEMS.map(item => (
-            <button
-              key={item.id}
-              className={`sidebar-item ${view === item.id ? 'active' : ''}`}
-              data-tooltip={item.label}
-              onClick={() => setView(item.id)}
-            >
-              {item.icon}
-            </button>
+          {NAV_ITEMS.map((item, i) => (
+            <React.Fragment key={item.id}>
+              {item.section === 'divider' && i > 0 && (
+                <div style={{ width: '60%', height: 1, background: 'var(--void-border)', margin: '4px auto' }} />
+              )}
+              <button
+                className={`sidebar-item ${view === item.id ? 'active' : ''}`}
+                data-tooltip={item.label}
+                onClick={() => setView(item.id)}
+              >
+                {item.icon}
+              </button>
+            </React.Fragment>
           ))}
         </div>
         <div className="sidebar-spacer" />
-        <span className="sidebar-badge">v1.0</span>
+        <span className="sidebar-badge">v2.0</span>
       </nav>
 
       {/* ─── MAIN AREA ─── */}
@@ -119,7 +129,10 @@ export default function App() {
         <div className="app-content">
           {view === 'command' && <CommandCenter platforms={platforms} schedulerStatus={schedulerStatus} />}
           {view === 'compose' && <ComposerView platforms={platforms} />}
-          {view === 'platforms' && <PlatformsView platforms={platforms} />}
+          {view === 'setup' && <SetupWizard />}
+          {view === 'rules' && <RulesView />}
+          {view === 'templates' && <TemplatesView />}
+          {view === 'campaigns' && <CampaignsView />}
           {view === 'analytics' && <AnalyticsView />}
           {view === 'pricing' && <PricingView />}
         </div>
