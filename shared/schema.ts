@@ -361,3 +361,89 @@ export const adCampaigns = pgTable("ad_campaigns", {
 export const insertAdCampaignSchema = createInsertSchema(adCampaigns).omit({ id: true, spent: true, impressions: true, clicks: true, conversions: true, reach: true, cpc: true, cpm: true, ctr: true, createdAt: true, updatedAt: true });
 export type InsertAdCampaign = z.infer<typeof insertAdCampaignSchema>;
 export type AdCampaign = typeof adCampaigns.$inferSelect;
+
+// ============================================
+// TRUST LAYER ECOSYSTEM TABLES
+// ============================================
+
+// Hallmarks — SHA-256 chained, sequential serial numbers (SC-00000001)
+export const hallmarks = pgTable("hallmarks", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  thId: text("th_id").notNull().unique(),       // SC-00000001
+  appId: text("app_id").notNull(),
+  appName: text("app_name").notNull(),
+  productName: text("product_name").notNull(),
+  releaseType: text("release_type").notNull(),   // genesis, release, campaign, user
+  userId: text("user_id"),
+  dataHash: text("data_hash").notNull(),         // SHA-256 of payload
+  txHash: text("tx_hash"),                       // Simulated blockchain tx
+  blockHeight: text("block_height"),
+  verificationUrl: text("verification_url"),
+  hallmarkId: integer("hallmark_id"),            // Numeric sequence
+  metadata: jsonb("metadata").default({}),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+export type Hallmark = typeof hallmarks.$inferSelect;
+
+// Hallmark Counters — Atomic sequence generator
+export const hallmarkCounters = pgTable("hallmark_counters", {
+  id: text("id").primaryKey(),                   // "sc-master"
+  currentSequence: text("current_sequence").notNull().default("0"),
+});
+
+// Trust Stamps — Immutable event log with hash chain
+export const trustStamps = pgTable("trust_stamps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: text("user_id"),
+  category: text("category").notNull(),          // signup, campaign-create, payout-request, etc
+  data: jsonb("data").default({}),
+  dataHash: text("data_hash").notNull(),
+  txHash: text("tx_hash"),
+  blockHeight: text("block_height"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+export type TrustStamp = typeof trustStamps.$inferSelect;
+
+// Affiliate Referrals — Track referral clicks and conversions
+export const affiliateReferrals = pgTable("affiliate_referrals", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  referrerId: text("referrer_id").notNull(),
+  referredUserId: text("referred_user_id"),
+  referralHash: text("referral_hash").notNull(), // The referrer's uniqueHash
+  platform: text("platform").default("signalcast"),
+  status: text("status").notNull().default("pending"), // pending, converted, expired
+  convertedAt: timestamp("converted_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_affiliate_referrals_referrer").on(table.referrerId),
+  index("idx_affiliate_referrals_hash").on(table.referralHash),
+  index("idx_affiliate_referrals_status").on(table.status),
+]);
+export type AffiliateReferral = typeof affiliateReferrals.$inferSelect;
+
+// Affiliate Commissions — Commission ledger
+export const affiliateCommissions = pgTable("affiliate_commissions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  referrerId: text("referrer_id").notNull(),
+  referralId: text("referral_id"),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  currency: text("currency").default("SIG"),
+  status: text("status").notNull().default("pending"), // pending, processing, paid
+  paidAt: timestamp("paid_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_affiliate_commissions_referrer").on(table.referrerId),
+  index("idx_affiliate_commissions_status").on(table.status),
+]);
+export type AffiliateCommission = typeof affiliateCommissions.$inferSelect;
+
+// Affiliate tier configuration
+export const AFFILIATE_TIERS = {
+  base:     { rate: 10,   minReferrals: 0,  label: "Base" },
+  silver:   { rate: 12.5, minReferrals: 5,  label: "Silver" },
+  gold:     { rate: 15,   minReferrals: 15, label: "Gold" },
+  platinum: { rate: 17.5, minReferrals: 30, label: "Platinum" },
+  diamond:  { rate: 20,   minReferrals: 50, label: "Diamond" },
+} as const;
+
+export const AFFILIATE_MIN_PAYOUT = 25; // Minimum SIG for payout request

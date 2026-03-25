@@ -24,6 +24,9 @@ import { startScheduler, stopScheduler, getSchedulerStatus } from './scheduler.j
 
 import { stripeRouter, handleStripeWebhook } from './stripe.js';
 import { registerTrustLayerSSO } from './trustLayerSSO.js';
+import { registerHallmarkRoutes } from './hallmarkRoutes.js';
+import { registerAffiliateRoutes } from './affiliateRoutes.js';
+import { registerEcosystemRoutes } from './ecosystemRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -63,6 +66,11 @@ app.use('/api/stripe', stripeRouter);
 
 // Trust Layer SSO — "Sign in with Trust Layer" consumer endpoints
 registerTrustLayerSSO(app);
+
+// Trust Layer Ecosystem — Hallmarks, Affiliate, Ecosystem Status
+registerHallmarkRoutes(app);
+registerAffiliateRoutes(app);
+registerEcosystemRoutes(app);
 
 // ─── Health ─────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
