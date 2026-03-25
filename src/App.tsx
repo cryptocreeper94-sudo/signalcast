@@ -8,6 +8,8 @@ import RulesView from './views/RulesView';
 import TemplatesView from './views/TemplatesView';
 import CampaignsView from './views/CampaignsView';
 import AuroraBackground from './components/AuroraBackground';
+import { PresaleBanner } from './components/PresaleBanner';
+import { EcosystemAccountHub } from './components/EcosystemAccountHub';
 
 type View = 'command' | 'compose' | 'setup' | 'rules' | 'templates' | 'campaigns' | 'analytics' | 'pricing';
 
@@ -71,6 +73,9 @@ export default function App() {
   }, [time]);
 
   return (
+    <>
+    <PresaleBanner />
+    <EcosystemAccountHub />
     <div className="app-shell">
       {/* ─── AURORA BACKGROUND ─── */}
       <AuroraBackground />
@@ -143,5 +148,6 @@ export default function App() {
         </div>
       </div>
     </div>
+    </>
   );
 }
