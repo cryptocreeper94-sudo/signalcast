@@ -623,6 +623,8 @@ html, body, #root {
   padding: 28px;
   position: relative;
   transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
 }
 
 .pricing-card:hover {
@@ -674,6 +676,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
 }
 
 .pricing-features li {
@@ -701,6 +704,10 @@ html, body, #root {
 .bento-2 { grid-template-columns: repeat(2, 1fr); }
 .bento-span-2 { grid-column: span 2; }
 .bento-span-3 { grid-column: span 3; }
+
+@media (max-width: 1200px) {
+  .bento-4 { grid-template-columns: repeat(2, 1fr); }
+}
 
 @media (max-width: 900px) {
   .bento-4 { grid-template-columns: repeat(2, 1fr); }
@@ -954,16 +961,19 @@ html, body, #root {
 /* ─── Feature Grid ──────────────────────────────────────────── */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
 .feature-item {
-  padding: 16px;
+  padding: 20px;
   border-radius: var(--radius-md);
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--void-border);
   transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .feature-item:hover { border-color: var(--void-border-hover); }
