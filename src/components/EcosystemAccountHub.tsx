@@ -556,5 +556,16 @@ export function EcosystemAccountHub() {
   <button style={S.carouselArrow(appPage===APP_TOTAL_PAGES-1)} onClick={()=>setAppPage(p=>Math.min(APP_TOTAL_PAGES-1,p+1))} disabled={appPage===APP_TOTAL_PAGES-1} aria-label="Next">›</button>
 </div></div>
     </>
+          ) : (
+            <div style={{ padding: '40px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>🌊</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.8)', marginBottom: 8 }}>Connect to Trust Layer</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 20, lineHeight: 1.5 }}>Sign in to access your wallet, identity, and ecosystem apps.</div>
+              <a href={`${HUB}/login`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', padding: '10px 24px', borderRadius: 10, background: 'linear-gradient(135deg,#06b6d4,#8b5cf6)', color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>Sign In</a>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 }
