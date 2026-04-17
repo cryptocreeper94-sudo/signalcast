@@ -1,4 +1,4 @@
-/**
+﻿/**
  * EcosystemAccountHub V3 — Trust Layer Identity Panel
  * =====================================================
  * Self-contained, zero-dependency React component.
@@ -59,19 +59,25 @@ function timeLeft(b: typeof BONUSES[0]) {
 
 // ── Ecosystem app grid ─────────────────────────────────────────────────────────
 const APPS = [
-  { n:'Trust Hub',   u:'https://trusthub.tlid.io',   i:'🛡️' },
-  { n:'TrustGen 3D', u:'https://trustgen.tlid.io',   i:'🎨' },
-  { n:'TrustVault',  u:'https://trustvault.tlid.io',  i:'🔐' },
-  { n:'Trust Layer', u:'https://dwtl.io',             i:'🌊' },
-  { n:'Chronicles',  u:'https://yourlegacy.io',        i:'📜' },
-  { n:'ORBIT',       u:'https://orbitstaffing.io',     i:'🌐' },
-  { n:'Bomber 3D',   u:'https://bomber.tlid.io',       i:'⛳' },
+  { n:'Trust Hub',   u:'https://trusthub.tlid.io',      i:'🛡️' },
+  { n:'TrustGen 3D', u:'https://trustgen.tlid.io',      i:'🎨' },
+  { n:'TrustVault',  u:'https://trustvault.tlid.io',    i:'🔐' },
+  { n:'Trust Layer', u:'https://dwtl.io',               i:'🌊' },
+  { n:'Chronicles',  u:'https://yourlegacy.io',         i:'📜' },
+  { n:'ORBIT',       u:'https://orbitstaffing.io',      i:'🌐' },
+  { n:'Bomber Golf', u:'https://bombergolf.tlid.io',    i:'⛳' },
   { n:'Lume',        u:'https://lume-lang.org',         i:'💡' },
-  { n:'DWSC',        u:'https://dwsc.io',              i:'◈'  },
-  { n:'SignalCast',  u:'https://signalcast.tlid.io',   i:'📡' },
-  { n:'DWStudios',   u:'https://darkwavestudios.io',   i:'🎛️' },
-  { n:'Arcade',      u:`${DWTL}/arcade`,              i:'🕹️' },
+  { n:'LumeLine',    u:'https://lumeline.app',          i:'📊' },
+  { n:'SignalCast',  u:'https://signalcast.tlid.io',    i:'📡' },
+  { n:'DWStudios',   u:'https://darkwavestudios.io',    i:'🎛️' },
+  { n:'THE VOID',    u:'https://intothevoid.app',       i:'🕳️' },
+  { n:'TrustGolf',   u:'https://trustgolf.app',         i:'🏌️' },
+  { n:'HappyEats',   u:'https://happyeats.tlid.io',    i:'🍔' },
+  { n:'DWSC',        u:'https://dwsc.io',              i:'◈'   },
+  { n:'Arcade',      u:'https://darkwavegames.io',     i:'🕹️' },
 ];
+const APPS_PER_PAGE = 8;
+const APP_TOTAL_PAGES = Math.ceil(APPS.length / APPS_PER_PAGE);
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 function getStoredToken(): string | null {
@@ -213,8 +219,24 @@ const S = {
   // Section header
   secLbl: { fontSize: 8, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.18)', marginBottom: 8 },
   // App grid
-  appGrid: { display: 'flex', flexWrap: 'wrap' as const, gap: 5, padding: '0 2px' },
-  appBtn: { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 9px', borderRadius: 7, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textDecoration: 'none' as const, color: 'rgba(255,255,255,0.45)', fontSize: 10, fontWeight: 600, minHeight: 28, transition: 'all 0.15s' },
+  carouselWrap: { overflow: 'hidden', touchAction: 'pan-y' },
+  carouselTrack: (page: number) => ({ display: 'flex', transform: `translateX(${-page * 100}%)`, transition: 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)', willChange: 'transform' as const }),
+  carouselPage: { minWidth: '100%', display: 'flex', flexWrap: 'wrap' as const, gap: 5, padding: '0 2px' },
+  carouselControls: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 10 },
+  carouselArrow: (disabled: boolean) => ({
+    background: 'none', border: '1px solid rgba(6,182,212,0.2)', borderRadius: 6,
+    width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: (disabled ? 'default' : 'pointer') as const, padding: 0, outline: 'none',
+    color: disabled ? 'rgba(255,255,255,0.12)' : '#67e8f9', fontSize: 14, lineHeight: 1,
+    opacity: disabled ? 0.4 : 1, transition: 'all 0.15s',
+  }),
+  carouselDot: (active: boolean) => ({
+    width: active ? 18 : 6, height: 6, borderRadius: 3,
+    background: active ? '#06b6d4' : 'rgba(255,255,255,0.15)',
+    border: 'none', cursor: 'pointer' as const, padding: 0, outline: 'none',
+    transition: 'all 0.25s cubic-bezier(0.25,0.46,0.45,0.94)',
+  }),
+  appBtn: { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 9px', borderRadius: 7, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textDecoration: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 10, fontWeight: 600, minHeight: 30, transition: 'all 0.15s' },,
   // Settings row
   setRow: { display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', textDecoration: 'none' as const, color: 'rgba(255,255,255,0.55)', transition: 'all 0.15s', borderRadius: 10, margin: '0 4px' },
   setIcon: { width: 30, height: 30, borderRadius: 9, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0 },
@@ -230,6 +252,7 @@ const S = {
 // ── Component ──────────────────────────────────────────────────────────────────
 export function EcosystemAccountHub() {
   const [open, setOpen]         = useState(false);
+  const [appPage, setAppPage] = useState(0);
   const [identity, setIdentity] = useState<any>(null);
   const [loading, setLoading]   = useState(false);
   const [copied, setCopied]     = useState<string | null>(null);
@@ -508,108 +531,30 @@ export function EcosystemAccountHub() {
               {/* Ecosystem Apps */}
               <div style={{ padding: '10px 14px', borderBottom: '1px solid rgba(255,255,255,0.025)' }}>
                 <div style={S.secLbl}>Ecosystem Apps</div>
-                <div style={S.appGrid}>
-                  {APPS.map(a => (
-                    <a key={a.n} style={S.appBtn} href={a.u} target="_blank" rel="noopener noreferrer">
-                      <span style={{ fontSize: 11 }}>{a.i}</span>{a.n}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Settings & Sign Out */}
-              <div style={{ padding: '6px 0 4px' }}>
-                <a style={S.setRow} href={`${HUB}/profile-editor`} target="_blank" rel="noopener noreferrer">
-                  <div style={S.setIcon}>⚙️</div>
-                  <div>
-                    <div style={S.setTitle}>Account Settings</div>
-                    <div style={S.setSub}>Profile, security, preferences</div>
-                  </div>
-                </a>
-                <button
-                  style={{ ...S.setRow, width: '100%', background: 'none', border: 'none', textAlign: 'left' as const, fontFamily: 'inherit' }}
-                  onClick={() => {
-                    for (const k of [...TOKEN_KEYS, ...USER_KEYS]) { try { localStorage.removeItem(k); } catch {} }
-                    setIdentity(null);
-                    close();
-                    window.location.reload();
-                  }}
-                >
-                  <div style={{ ...S.setIcon, background: 'rgba(244,63,94,0.06)', border: '1px solid rgba(244,63,94,0.12)' }}>🚪</div>
-                  <div>
-                    <div style={{ ...S.setTitle, color: 'rgba(244,63,94,0.7)' }}>Sign Out</div>
-                    <div style={S.setSub}>Clear session from this app</div>
-                  </div>
-                </button>
-              </div>
-            </>
-          ) : (
-            /* ── NOT LOGGED IN ───────────────────────────────────── */
-            <>
-              {/* Weekly Bonus — show to guests too */}
-              <div style={S.bonus(bonus)}>
-                <div style={S.bLbl(bonus.ac)}><span style={S.bDot(bonus.ac)} />🔥 This Week's Bonus</div>
-                <div style={S.bHead}>{bonus.icon} {bonus.headline}</div>
-                <div style={S.bRew}>{bonus.reward}</div>
-                <div style={S.bStats}>
-                  <span style={S.bSig}>⚡ {bonus.sig.toLocaleString()} SIG</span>
-                  {bonus.mult && <span style={S.bMult}>{bonus.mult}</span>}
-                  {bonus.perk && <span style={S.bPerk}>+ {bonus.perk}</span>}
-                </div>
-                <div style={S.bTimer}>⏱ {tLeft}</div>
-              </div>
-
-              {/* Connect CTA */}
-              <div style={S.conn}>
-                <div style={{ fontSize: 42, opacity: 0.45 }}>🛡️</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.88)', letterSpacing: '-0.01em' }}>
-                  Connect to Trust Layer
-                </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.32)', lineHeight: 1.6, maxWidth: 260 }}>
-                  Sign in with your Trust Layer ID to access your wallet, hallmark, referral stats, and ecosystem apps.
-                </div>
-                <a style={S.connBtn} href={`${HUB}/login?redirect=${redir}`} target="_blank" rel="noopener noreferrer">
-                  🔗 Connect Account
-                </a>
-                <a style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', textDecoration: 'none' }} href={`${HUB}/register?redirect=${redir}`} target="_blank" rel="noopener noreferrer">
-                  New? Create your Trust Layer ID →
-                </a>
-              </div>
-
-              {/* Presale teaser */}
-              <div style={{ ...S.walSec, marginTop: 0 }}>
-                <div style={S.secLbl}>Signal Charging</div>
-                <a style={{ ...S.walRow, textDecoration: 'none' }} href={PRESALE} target="_blank" rel="noopener noreferrer">
-                  <div style={S.walIcon}>⚡</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={S.walTitle}>Start Charging</div>
-                    <div style={S.walSub}>SIG $0.001 → $0.01 at TGE</div>
-                  </div>
-                  <span style={S.pill('cyan')}>10×</span>
-                </a>
-              </div>
-
-              {/* Ecosystem grid for guests */}
-              <div style={{ padding: '10px 14px' }}>
-                <div style={S.secLbl}>Explore the Ecosystem</div>
-                <div style={S.appGrid}>
-                  {APPS.map(a => (
-                    <a key={a.n} style={S.appBtn} href={a.u} target="_blank" rel="noopener noreferrer">
-                      <span style={{ fontSize: 11 }}>{a.i}</span>{a.n}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Footer */}
-          <div style={S.ft}>
-            <a style={S.ftL} href={HUB} target="_blank" rel="noopener noreferrer">Trust Layer Hub</a>
-            {' '}· Ecosystem Identity Hub V3
-          </div>
-        </div>
-      )}
+                <div style={{overflow:'hidden',touchAction:'pan-y'}}
+  onTouchStart={(e:React.TouchEvent)=>{(window as any)._hubTx=e.touches[0].clientX;}}
+  onTouchEnd={(e:React.TouchEvent)=>{const dx=e.changedTouches[0].clientX-(window as any)._hubTx;if(dx<-40)setAppPage(p=>Math.min(APP_TOTAL_PAGES-1,p+1));else if(dx>40)setAppPage(p=>Math.max(0,p-1));}}>
+  <div style={S.carouselTrack(appPage)}>
+    {Array.from({length:APP_TOTAL_PAGES}).map((_,pi)=>(
+      <div key={pi} style={S.carouselPage}>
+        {APPS.slice(pi*APPS_PER_PAGE,(pi+1)*APPS_PER_PAGE).map(a=>(
+          <a key={a.n} style={S.appBtn} href={a.u} target="_blank" rel="noopener noreferrer">
+            <span style={{fontSize:11}}>{a.i}</span>{a.n}
+          </a>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+<div style={S.carouselControls}>
+  <button style={S.carouselArrow(appPage===0)} onClick={()=>setAppPage(p=>Math.max(0,p-1))} disabled={appPage===0} aria-label="Previous">‹</button>
+  <div style={{display:'flex',gap:4,alignItems:'center'}}>
+    {Array.from({length:APP_TOTAL_PAGES}).map((_,i)=>(
+      <button key={i} style={S.carouselDot(i===appPage)} onClick={()=>setAppPage(i)} aria-label={`Page ${i+1}`} />
+    ))}
+  </div>
+  <button style={S.carouselArrow(appPage===APP_TOTAL_PAGES-1)} onClick={()=>setAppPage(p=>Math.min(APP_TOTAL_PAGES-1,p+1))} disabled={appPage===APP_TOTAL_PAGES-1} aria-label="Next">›</button>
+</div>)}
     </>
   );
 }
