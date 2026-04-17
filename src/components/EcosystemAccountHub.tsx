@@ -236,7 +236,7 @@ const S = {
     border: 'none', cursor: 'pointer' as const, padding: 0, outline: 'none',
     transition: 'all 0.25s cubic-bezier(0.25,0.46,0.45,0.94)',
   }),
-  appBtn: { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 9px', borderRadius: 7, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textDecoration: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 10, fontWeight: 600, minHeight: 30, transition: 'all 0.15s' },,
+  appBtn: { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 9px', borderRadius: 7, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textDecoration: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 10, fontWeight: 600, minHeight: 30, transition: 'all 0.15s' },
   // Settings row
   setRow: { display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', cursor: 'pointer', textDecoration: 'none' as const, color: 'rgba(255,255,255,0.55)', transition: 'all 0.15s', borderRadius: 10, margin: '0 4px' },
   setIcon: { width: 30, height: 30, borderRadius: 9, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0 },
