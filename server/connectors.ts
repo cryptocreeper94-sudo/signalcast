@@ -63,11 +63,11 @@ export class TwitterConnector {
   private accessToken: string;
   private accessTokenSecret: string;
 
-  constructor(credentials?: TwitterCredentials) {
-    this.apiKey = credentials?.apiKey || process.env.TWITTER_API_KEY || '';
-    this.apiSecret = credentials?.apiSecret || process.env.TWITTER_API_SECRET || '';
-    this.accessToken = credentials?.accessToken || process.env.TWITTER_ACCESS_TOKEN || '';
-    this.accessTokenSecret = credentials?.accessTokenSecret || process.env.TWITTER_ACCESS_TOKEN_SECRET || '';
+  constructor(credentials: TwitterCredentials) {
+    this.apiKey = credentials.apiKey;
+    this.apiSecret = credentials.apiSecret;
+    this.accessToken = credentials.accessToken;
+    this.accessTokenSecret = credentials.accessTokenSecret;
   }
 
   isConfigured(): boolean {

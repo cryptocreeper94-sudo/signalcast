@@ -44,7 +44,7 @@ const TENANT_URLS: Record<string, string> = {
 const POSTING_HOURS = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 // X/Twitter rate limit protection
-let xPostsThisSession = 0;
+let xPostsThisSession: Map<string, number> = new Map();
 const MAX_X_POSTS_PER_RESTART = 1;
 
 function getCurrentCSTTime(): { hour: number; minute: number; dayOfWeek: number } {
@@ -213,15 +213,28 @@ async function checkAndExecuteScheduledPosts(): Promise<void> {
     }
 
     // X/Twitter (rate-limited)
-    const twitter = new TwitterConnector();
-    if (twitter.isConfigured()) {
-      if (xPostsThisSession < MAX_X_POSTS_PER_RESTART || pendingSlots.length === 1) {
-        const xResult = await twitter.post(message, imageUrl);
-        xPostsThisSession++;
+    const twitter = TwitterConnector.forTenant(integration);
+    if (twitter) {
+      const currentRate = xPostsThisSession.get(tenant) || 0;
+      if (currentRate < MAX_X_POSTS_PER_RESTART || pendingSlots.length === 1) {
+        
+        let xMessage = message;
+        // Dynamic generation for master tenant
+        if (tenant === 'master' || tenant === 'darkwave' || tenant === 'cryptocreeper94') {
+             try {
+               const { generateLumeTweet } = await import('./ai-social-generator.js');
+               xMessage = await generateLumeTweet();
+             } catch (e) {
+               console.error('[SignalCast X] Dynamic generation failed, falling back to db content', e);
+             }
+        }
+
+        const xResult = await twitter.post(xMessage, imageUrl);
+        xPostsThisSession.set(tenant, currentRate + 1);
         console.log(`[SignalCast X] ${xResult.success ? '✓' : '✗'} ${xResult.externalId || xResult.error || ''}`);
         if (xResult.error?.includes('429') || xResult.error?.includes('Too Many')) {
-          xPostsThisSession = MAX_X_POSTS_PER_RESTART + 10;
-          console.log('[SignalCast X] Rate limited — skipping X for remaining catch-ups');
+          xPostsThisSession.set(tenant, MAX_X_POSTS_PER_RESTART + 10);
+          console.log(`[SignalCast X] Rate limited — skipping X for ${tenant} for remaining catch-ups`);
         }
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
@@ -238,10 +251,7 @@ export function startScheduler(): void {
   console.log(`[SignalCast] Tenants: ${ECOSYSTEM_TENANTS.join(', ')}`);
   console.log('[SignalCast] Organic posts hourly 6am-10pm CST (17 posts/day)');
 
-  const twitter = new TwitterConnector();
-  console.log(`[SignalCast] X (Twitter): ${twitter.isConfigured() ? 'ENABLED' : 'DISABLED'}`);
-
-  xPostsThisSession = 0;
+  xPostsThisSession.clear();
   isRunning = true;
 
   checkAndExecuteScheduledPosts().catch(err => console.error('[SignalCast] Initial check error:', err));
