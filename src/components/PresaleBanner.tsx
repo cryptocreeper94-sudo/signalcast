@@ -9,7 +9,7 @@ const PRESALE_URL = 'https://dwtl.io/presale';
 
 const styles: Record<string, React.CSSProperties> = {
   banner: {
-    position: 'relative', zIndex: 50,
+    position: 'relative', zIndex: 1,
     background: 'linear-gradient(135deg, rgba(6,182,212,0.06) 0%, rgba(168,85,247,0.04) 50%, rgba(6,182,212,0.06) 100%)',
     backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
     borderBottom: '1px solid rgba(6,182,212,0.25)', padding: '10px 16px',
