@@ -554,7 +554,7 @@ export function EcosystemAccountHub() {
     ))}
   </div>
   <button style={S.carouselArrow(appPage===APP_TOTAL_PAGES-1)} onClick={()=>setAppPage(p=>Math.min(APP_TOTAL_PAGES-1,p+1))} disabled={appPage===APP_TOTAL_PAGES-1} aria-label="Next">›</button>
-</div>)}
+</div></div>
     </>
   );
 }
