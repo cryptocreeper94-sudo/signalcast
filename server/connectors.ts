@@ -473,7 +473,12 @@ export class PinterestConnector {
 export type Platform = 'twitter' | 'discord' | 'telegram' | 'facebook' | 'instagram' | 'nextdoor' | 'linkedin' | 'reddit' | 'pinterest';
 
 export const platformConnectors = {
-  twitter: new TwitterConnector(),
+  twitter: new TwitterConnector({
+    apiKey: process.env.TWITTER_API_KEY || '',
+    apiSecret: process.env.TWITTER_API_SECRET || '',
+    accessToken: process.env.TWITTER_ACCESS_TOKEN || '',
+    accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
+  }),
   discord: new DiscordConnector(),
   telegram: new TelegramConnector(),
   facebook: new FacebookConnector(),
