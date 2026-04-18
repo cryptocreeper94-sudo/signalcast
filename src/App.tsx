@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import CommandCenter from './views/CommandCenter';
 import ComposerView from './views/ComposerView';
 import SetupWizard from './views/SetupWizard';
@@ -10,6 +10,7 @@ import CampaignsView from './views/CampaignsView';
 import AuroraBackground from './components/AuroraBackground';
 import { PresaleBanner } from './components/PresaleBanner';
 import { EcosystemAccountHub } from './components/EcosystemAccountHub';
+import { EcosystemFooter } from './components/EcosystemFooter';
 
 type View = 'command' | 'compose' | 'setup' | 'rules' | 'templates' | 'campaigns' | 'analytics' | 'pricing';
 
@@ -76,6 +77,7 @@ export default function App() {
     <>
     <PresaleBanner />
     <EcosystemAccountHub />
+        <EcosystemFooter appId="signalcast" />
     <div className="app-shell">
       {/* ─── AURORA BACKGROUND ─── */}
       <AuroraBackground />
