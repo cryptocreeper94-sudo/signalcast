@@ -1,4 +1,4 @@
-/**
+﻿/**
  * EcosystemNavigator V1 — Trust Layer Visual TOC
  * ================================================
  * Three-tab full-screen overlay:
@@ -403,7 +403,7 @@ export function EcosystemNavigator() {
         {[
           { label: 'Apps', value: '42', icon: '📱', color: '#06b6d4' },
           { label: 'Papers', value: '42', icon: '📄', color: '#a78bfa' },
-          { label: 'LOC', value: '2.1M+', icon: '💻', color: '#10b981' },
+          { label: 'LOC', value: '13.7M+', icon: '💻', color: '#10b981' },
           { label: 'Verticals', value: '8', icon: '◈', color: '#f59e0b' },
           { label: 'Papers', value: '42', icon: '🎓', color: '#ec4899' },
           { label: 'Zenodo DOIs', value: '42', icon: '🔗', color: '#84cc16' },
