@@ -1,121 +1,142 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-<head>`n    <link rel="manifest" href="/manifest.json" />`n    <meta name="theme-color" content="#06b6d4" />`n    <meta name="apple-mobile-web-app-capable" content="yes" />`n    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignalCast — AI-Powered Social Media Automation</title>
-  <meta name="description" content="SignalCast — AI-powered social media automation for the Trust Layer ecosystem. Schedule, create, and auto-post across every platform." />
-  <link rel="canonical" href="https://signalcast.ad/" />
-  <meta property="og:title" content="SignalCast" />
-  <meta property="og:description" content="AI-powered social media automation. One engine, every platform." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://signalcast.ad/" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="SignalCast" />
-  <meta name="twitter:description" content="AI-powered social media automation for the Trust Layer ecosystem." />
-  <meta name="color-scheme" content="dark" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignalCast â€” Coming 5.22.26 Â· DarkWave Studios</title>
+  <meta name="description" content="Automated social media broadcasting powered by deterministic AI. Schedule, publish, and analyze across every platform — without the guesswork. Part of the DarkWave Studios ecosystem. Launching May 22, 2026.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--accent:#00ffd4;--accent-dim:#00b4d8;--purple:#8a5cf6;--bg:#030712;--text:#f0f4f8;--text-dim:rgba(240,244,248,.55);--text-muted:rgba(240,244,248,.28);--border:rgba(255,255,255,.06);--border-hover:rgba(0,255,212,.18);--accent-glow:rgba(0,255,212,.08)}
+    html,body{min-height:100vh;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-    <!-- DarkWave Studios Ecosystem Analytics -->
-    <script>
-      (function(){
-        var appId = document.querySelector('meta[name="dw-app-id"]');
-        var id = appId ? appId.content : window.location.hostname;
-        function track(type, data) {
-          try {
-            navigator.sendBeacon('https://darkwavestudios.io/api/analytics', JSON.stringify({
-              app: id, type: type, url: window.location.href,
-              ref: document.referrer, ts: Date.now(), ...data
-            }));
-          } catch(e) {}
-        }
-        track('pageview');
-        window.addEventListener('popstate', function(){ track('navigate'); });
-        var origPush = history.pushState;
-        history.pushState = function(){ origPush.apply(this, arguments); track('navigate'); };
-      })();
-    </script>
-  </head>
+    /* Background */
+    .bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.1;animation:drift 28s ease-in-out infinite alternate}
+    .orb-1{width:600px;height:600px;background:var(--accent);top:-200px;left:-150px;animation-duration:32s}
+    .orb-2{width:500px;height:500px;background:var(--purple);bottom:-150px;right:-100px;animation-duration:26s;animation-delay:8s}
+    @keyframes drift{0%{transform:translate(0,0)}100%{transform:translate(60px,-40px)}}
+    .bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px}
+
+    /* Layout */
+    .wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+
+    /* Logo */
+    .dw-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:56px;text-decoration:none;opacity:.7;transition:opacity .2s}
+    .dw-logo:hover{opacity:1}
+    .dw-logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#000}
+    .dw-logo-text{font-size:13px;font-weight:700;color:var(--text-dim);letter-spacing:.04em}
+
+    /* App Icon */
+    .app-icon{font-size:5rem;margin-bottom:24px;display:block;filter:drop-shadow(0 0 40px var(--accent-glow));animation:pulse 3s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+    /* Date badge */
+    .date-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;background:var(--accent-glow);border:1px solid var(--border-hover);font-size:11px;font-weight:800;color:var(--accent);margin-bottom:24px;letter-spacing:.12em;font-family:'JetBrains Mono',monospace}
+    .date-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 1.4s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+    /* Heading */
+    h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:900;letter-spacing:-.05em;line-height:1.08;margin-bottom:16px;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 60%,var(--text) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .app-desc{font-size:1rem;color:var(--text-dim);max-width:480px;margin:0 auto 40px;line-height:1.75}
+
+    /* Countdown */
+    .countdown{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:48px}
+    .cd-block{display:flex;flex-direction:column;align-items:center}
+    .cd-num{font-size:clamp(2rem,5vw,3rem);font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--text);background:rgba(0,255,212,.06);border:1px solid rgba(0,255,212,.12);border-radius:12px;padding:12px 18px;min-width:70px;line-height:1;transition:all .3s}
+    .cd-label{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.14em;margin-top:8px;font-weight:600}
+    .cd-sep{font-size:2rem;font-weight:900;color:var(--accent);opacity:.4;padding-bottom:20px}
+
+    /* Email capture */
+    .capture{display:flex;gap:10px;max-width:420px;margin:0 auto 32px}
+    .capture input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border-hover);border-radius:12px;padding:13px 18px;font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:all .2s}
+    .capture input:focus{border-color:var(--accent);box-shadow:0 0 24px rgba(0,255,212,.1)}
+    .capture input::placeholder{color:var(--text-muted)}
+    .capture button{padding:13px 24px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent-dim));color:#000;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .2s}
+    .capture button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,255,212,.25)}
+    .capture button.done{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.25);pointer-events:none}
+    .capture-hint{font-size:11px;color:var(--text-muted);margin-bottom:40px}
+
+    /* Footer links */
+    .footer-links{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+    .footer-links a{font-size:12px;color:var(--text-muted);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-links span{color:var(--border);font-size:12px}
+
+    @media(max-width:480px){.capture{flex-direction:column}.countdown{gap:8px}.cd-num{padding:10px 12px;min-width:54px;font-size:1.6rem}}
+  </style>
+</head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+  <div class="bg-canvas"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <div class="bg-grid"></div>
+  <div class="wrap">
+    <a href="https://tlid.io" class="dw-logo">
+      <div class="dw-logo-mark">DW</div>
+      <span class="dw-logo-text">DarkWave Studios</span>
+    </a>
 
-    <!-- DarkWave Studios Command Center Easter Egg -->
-    <script>
-      (function(){
-        var cc=0,timer=null;
-        function injectShield(){
-          var f=document.querySelector('footer');
-          if(!f)return setTimeout(injectShield,2000);
-          var existing=f.querySelector('[data-dw-shield]');
-          if(existing)return;
-          var s=document.createElement('span');
-          s.setAttribute('data-dw-shield','1');
-          s.textContent='\u25C8';
-          s.style.cssText='cursor:default;opacity:0.2;font-size:14px;user-select:none;margin-left:6px;';
-          s.addEventListener('click',function(){
-            cc++;if(timer)clearTimeout(timer);
-            if(cc>=3){cc=0;showPinModal();}
-            else{timer=setTimeout(function(){cc=0;},2000);}
-          });
-          var copy=f.querySelector('[class*="copyright"],[class*="Copyright"]');
-          if(copy){copy.appendChild(s);}
-          else{var last=f.lastElementChild||f;last.appendChild(s);}
-        }
-        function showPinModal(){
-          var o=document.createElement('div');
-          o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:99999;';
-          o.addEventListener('click',function(e){if(e.target===o)o.remove();});
-          var box=document.createElement('div');
-          box.style.cssText='background:#0a0a1a;border:1px solid rgba(6,182,212,0.3);border-radius:16px;padding:32px;text-align:center;min-width:280px;font-family:system-ui,sans-serif;';
-          box.innerHTML='<div style="font-size:12px;color:#06b6d4;margin-bottom:16px;letter-spacing:3px;">AUTHENTICATION REQUIRED</div>';
-          var inp=document.createElement('input');
-          inp.type='password';inp.maxLength=4;
-          inp.style.cssText='background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.2);border-radius:8px;padding:12px;color:#fff;font-size:24px;text-align:center;width:120px;letter-spacing:8px;outline:none;';
-          inp.addEventListener('keydown',function(e){
-            if(e.key==='Enter'){
-              if(inp.value==='0424'){o.remove();showCommandCenter();}
-              else{inp.style.borderColor='#f43f5e';inp.value='';setTimeout(function(){inp.style.borderColor='rgba(6,182,212,0.2)';},600);}
-            }
-          });
-          box.appendChild(inp);
-          var hint=document.createElement('div');
-          hint.style.cssText='margin-top:12px;font-size:10px;color:rgba(255,255,255,0.3);';
-          hint.textContent='Enter PIN to continue';
-          box.appendChild(hint);
-          o.appendChild(box);document.body.appendChild(o);
-          setTimeout(function(){inp.focus();},100);
-        }
-        function showCommandCenter(){
-          var o=document.createElement('div');
-          o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;z-index:99999;';
-          o.addEventListener('click',function(e){if(e.target===o)o.remove();});
-          var links=[
-            {l:'Trust Layer Dashboard',u:'https://dwtl.io'},
-            {l:'Axiom Studio',u:'https://axiomstudio.dev'},
-            {l:'DWSC Research',u:'https://dwsc.io'},
-            {l:'Meridian Canon',u:'https://meridiancanon.com'},
-            {l:'DarkWave Pulse',u:'https://pulse.darkwavestudios.io'},
-            {l:'Ecosystem Analytics',u:'https://darkwavestudios.io/analytics'},
-            {l:'DarkWave Studios',u:'https://darkwavestudios.io'}
-          ];
-          var html='<div style="background:linear-gradient(135deg,#0a0a1a,#0d1117);border:1px solid rgba(6,182,212,0.2);border-radius:20px;padding:40px;max-width:500px;width:90%;font-family:system-ui,sans-serif;">';
-          html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;"><div style="font-size:14px;color:#06b6d4;letter-spacing:3px;font-weight:700;">\u27D0 COMMAND CENTER</div><span id="cc-close" style="color:#666;font-size:20px;cursor:pointer;">\u2715</span></div>';
-          html+='<div style="display:grid;gap:10px;">';
-          links.forEach(function(lk){
-            html+='<a href="'+lk.u+'" target="_blank" rel="noopener" style="display:block;padding:12px 16px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.1);border-radius:10px;color:#94a3b8;text-decoration:none;font-size:13px;transition:all 0.2s;" onmouseenter="this.style.borderColor=\'rgba(6,182,212,0.3)\';this.style.color=\'#06b6d4\';" onmouseleave="this.style.borderColor=\'rgba(6,182,212,0.1)\';this.style.color=\'#94a3b8\';">'+lk.l+'</a>';
-          });
-          html+='</div><div style="margin-top:20px;font-size:10px;color:rgba(255,255,255,0.2);text-align:center;">\u00A9 2026 DarkWave Studios LLC</div></div>';
-          o.innerHTML=html;
-          document.body.appendChild(o);
-          document.getElementById('cc-close').addEventListener('click',function(){o.remove();});
-        }
-        if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(injectShield,1000);});
-        else setTimeout(injectShield,1000);
-      })();
-    </script>
-  </body>
+    <span class="app-icon">📡</span>
+    <div class="date-badge">5.22.26</div>
+    <h1>SignalCast</h1>
+    <p class="app-desc">Automated social media broadcasting powered by deterministic AI. Schedule, publish, and analyze across every platform — without the guesswork.</p>
+
+    <div class="countdown">
+      <div class="cd-block"><span class="cd-num" id="cd-d">--</span><span class="cd-label">Days</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-label">Hours</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-label">Mins</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-label">Secs</span></div>
+    </div>
+
+    <div class="capture">
+      <input type="email" id="teaser-email" placeholder="your@email.com" autocomplete="email">
+      <button id="teaser-btn" onclick="submitEmail()">Notify Me</button>
+    </div>
+    <p class="capture-hint">Be first to know when we go live. No spam, ever.</p>
+
+    <div class="footer-links">
+      <a href="https://axiom42.com">Axiom AI</a>
+      <span>Â·</span>
+      <a href="https://dwtl.io">Trust Layer</a>
+      <span>Â·</span>
+      <a href="https://tlid.io">TLID</a>
+      <span>Â·</span>
+      <a href="https://darkwavestudios.io">DarkWave Studios</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var launch = new Date('2026-05-22T09:00:00-05:00').getTime();
+      function tick(){
+        var diff = launch - Date.now();
+        if(diff<=0){document.querySelector('.countdown').textContent='We are live!';return;}
+        var pad=function(n){return n<10?'0'+n:''+n;};
+        document.getElementById('cd-d').textContent=pad(Math.floor(diff/86400000));
+        document.getElementById('cd-h').textContent=pad(Math.floor((diff%86400000)/3600000));
+        document.getElementById('cd-m').textContent=pad(Math.floor((diff%3600000)/60000));
+        document.getElementById('cd-s').textContent=pad(Math.floor((diff%60000)/1000));
+      }
+      tick(); setInterval(tick,1000);
+    })();
+
+    function submitEmail(){
+      var input=document.getElementById('teaser-email');
+      var btn=document.getElementById('teaser-btn');
+      var email=input.value.trim();
+      if(!email||!email.includes('@')){input.style.borderColor='rgba(239,68,68,.5)';setTimeout(function(){input.style.borderColor='';},1200);return;}
+      try{var l=JSON.parse(localStorage.getItem('dw_launch_list')||'[]');if(!l.includes(email)){l.push(email);localStorage.setItem('dw_launch_list',JSON.stringify(l));}}catch(e){}
+      fetch('https://axiom42.com/api/sms/optin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Launch Subscriber',phone:'email-only',email:email,consent:true,consentTimestamp:new Date().toISOString(),consentSource:'teaser_'+window.location.hostname})}).catch(function(){});
+      btn.textContent='âœ“ You\'re on the list';
+      btn.classList.add('done');
+      input.value='';
+    }
+    document.getElementById('teaser-email').addEventListener('keydown',function(e){if(e.key==='Enter')submitEmail();});
+  </script>
+</body>
 </html>
+
