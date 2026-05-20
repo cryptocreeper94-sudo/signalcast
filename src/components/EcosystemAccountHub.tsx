@@ -590,6 +590,62 @@ export function EcosystemAccountHub() {
   </div>
   <button style={S.carouselArrow(appPage===APP_TOTAL_PAGES-1)} onClick={()=>setAppPage(p=>Math.min(APP_TOTAL_PAGES-1,p+1))} disabled={appPage===APP_TOTAL_PAGES-1} aria-label="Next">›</button>
 </div></div>
+
+              {/* ── Trust Hub — Free Download ── */}
+              <div style={{ padding: '10px 14px' }}>
+                <a href="https://expo.dev/accounts/cryptocreeper/projects/trust-layer-hub/builds/e90deea6-4ae4-43b8-8a7a-628c0b51ce49"
+                   target="_blank" rel="noopener noreferrer"
+                   style={{
+                     display:'flex', alignItems:'center', gap:12, padding:'12px 14px',
+                     borderRadius:12, textDecoration:'none',
+                     background:'linear-gradient(135deg,rgba(6,182,212,0.10),rgba(14,165,233,0.06))',
+                     border:'1px solid rgba(6,182,212,0.18)', transition:'border-color 0.2s',
+                   }}
+                   onMouseEnter={(e:any)=>e.currentTarget.style.borderColor='rgba(6,182,212,0.4)'}
+                   onMouseLeave={(e:any)=>e.currentTarget.style.borderColor='rgba(6,182,212,0.18)'}
+                >
+                  <div style={{ width:40, height:40, borderRadius:10, flexShrink:0,
+                    background:'linear-gradient(135deg,#06b6d4,#0ea5e9)',
+                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>🛡️</div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.92)' }}>Trust Layer Hub</div>
+                    <div style={{ fontSize:10, color:'rgba(6,182,212,0.6)', marginTop:1 }}>Your entire ecosystem in one app</div>
+                  </div>
+                  <div style={{
+                    padding:'5px 12px', borderRadius:8, fontSize:11, fontWeight:700,
+                    background:'linear-gradient(135deg,#06b6d4,#0ea5e9)', color:'#000',
+                    whiteSpace:'nowrap' as const,
+                  }}>FREE ↓</div>
+                </a>
+              </div>
+
+              {/* ── Lume Scan — Paid Product Ad ── */}
+              <div style={{ padding: '0 14px 14px' }}>
+                <a href="https://lumeauto.tech/order"
+                   target="_blank" rel="noopener noreferrer"
+                   style={{
+                     display:'flex', alignItems:'center', gap:12, padding:'12px 14px',
+                     borderRadius:12, textDecoration:'none',
+                     background:'linear-gradient(135deg,rgba(16,185,129,0.08),rgba(245,158,11,0.05))',
+                     border:'1px solid rgba(16,185,129,0.15)', transition:'border-color 0.2s',
+                   }}
+                   onMouseEnter={(e:any)=>e.currentTarget.style.borderColor='rgba(16,185,129,0.35)'}
+                   onMouseLeave={(e:any)=>e.currentTarget.style.borderColor='rgba(16,185,129,0.15)'}
+                >
+                  <div style={{ width:40, height:40, borderRadius:10, flexShrink:0,
+                    background:'linear-gradient(135deg,#10b981,#f59e0b)',
+                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>🔧</div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.92)' }}>Lume Scan</div>
+                    <div style={{ fontSize:10, color:'rgba(16,185,129,0.6)', marginTop:1 }}>Pro OBD-II diagnostics · 42 live signals</div>
+                  </div>
+                  <div style={{
+                    padding:'5px 10px', borderRadius:8, fontSize:11, fontWeight:700,
+                    background:'linear-gradient(135deg,#10b981,#059669)', color:'#000',
+                    whiteSpace:'nowrap' as const,
+                  }}>$49.99</div>
+                </a>
+              </div>
     </>
           ) : (
             <div style={{ padding: '40px 24px', textAlign: 'center' }}>
