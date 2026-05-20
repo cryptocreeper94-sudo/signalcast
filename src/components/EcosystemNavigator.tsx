@@ -18,9 +18,9 @@ interface App      { id: string; v: string; n: string; i: string; u: string; hoo
 
 const VERTICALS: Vertical[] = [
   { id:'core',       label:'Core Identity',     icon:'🌊', color:'#06b6d4', glow:'rgba(6,182,212,0.18)'   },
-  { id:'language',   label:'Language & Dev',    icon:'💡', color:'#a78bfa', glow:'rgba(167,139,250,0.18)' },
+  { id:'language',   label:'Language & Dev',    icon:'💡', color:'#38bdf8', glow:'rgba(56,189,248,0.18)' },
   { id:'creative',   label:'Creative Studio',   icon:'🎨', color:'#f43f5e', glow:'rgba(244,63,94,0.18)'  },
-  { id:'gaming',     label:'Gaming & Social',   icon:'🎮', color:'#8b5cf6', glow:'rgba(139,92,246,0.18)' },
+  { id:'gaming',     label:'Gaming & Social',   icon:'🎮', color:'#0ea5e9', glow:'rgba(14,165,233,0.18)' },
   { id:'enterprise', label:'Enterprise & Ops',  icon:'🏢', color:'#10b981', glow:'rgba(16,185,129,0.18)' },
   { id:'automotive', label:'Automotive',         icon:'🚗', color:'#f59e0b', glow:'rgba(245,158,11,0.18)' },
   { id:'lifestyle',  label:'Lifestyle & Health', icon:'🌿', color:'#84cc16', glow:'rgba(132,204,22,0.18)'  },
@@ -402,7 +402,7 @@ export function EcosystemNavigator() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 12, marginBottom: 28 }}>
         {[
           { label: 'Apps', value: '42', icon: '📱', color: '#06b6d4' },
-          { label: 'Papers', value: '42', icon: '📄', color: '#a78bfa' },
+          { label: 'Papers', value: '42', icon: '📄', color: '#38bdf8' },
           { label: 'LOC', value: '13.7M+', icon: '💻', color: '#10b981' },
           { label: 'Verticals', value: '8', icon: '◈', color: '#f59e0b' },
           { label: 'Papers', value: '42', icon: '🎓', color: '#ec4899' },
@@ -444,7 +444,7 @@ export function EcosystemNavigator() {
       </div>
 
       {/* Governance banner */}
-      <div style={{ marginTop: 20, padding: '14px 18px', borderRadius: 12, background: 'rgba(167,139,250,0.05)', border: '1px solid rgba(167,139,250,0.15)' }}>
+      <div style={{ marginTop: 20, padding: '14px 18px', borderRadius: 12, background: 'rgba(56,189,248,0.05)', border: '1px solid rgba(56,189,248,0.15)' }}>
         <div style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', marginBottom: 6 }}>🔒 Trust Layer Deployment Standard v1.0 — ACTIVE</div>
         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>
           All 42 applications are governed by the Lume-V deployment standard. Every non-Lume app is wrapped in a

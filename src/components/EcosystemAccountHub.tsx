@@ -33,11 +33,11 @@ const USER_KEYS  = ['dwtl_user', 'tl_user', 'trustlayer_user', 'user', 'auth_use
 // ── Weekly bonus rotation ──────────────────────────────────────────────────────
 const BONUSES = [
   { id:'chronicles', app:'Chronicles',   icon:'📜', headline:'Legacy Founders Drive',  reward:'Refer a friend to Chronicles',  sig:500,  mult:'2×', perk:'Founder Badge',   url:'https://yourlegacy.io/chronicles/login', ac:'#06b6d4', gl:'rgba(6,182,212,0.07)',  s:'2026-03-24', e:'2026-04-07' },
-  { id:'orbit',      app:'ORBIT',         icon:'🌐', headline:'ORBIT Member Drive',     reward:'Onboard someone to ORBIT',      sig:1000, mult:'3×', perk:'Hallmark boost',  url:'https://orbitstaffing.io',               ac:'#8b5cf6', gl:'rgba(139,92,246,0.07)', s:'2026-04-07', e:'2026-04-21' },
+  { id:'orbit',      app:'ORBIT',         icon:'🌐', headline:'ORBIT Member Drive',     reward:'Onboard someone to ORBIT',      sig:1000, mult:'3×', perk:'Hallmark boost',  url:'https://orbitstaffing.io',               ac:'#0ea5e9', gl:'rgba(14,165,233,0.07)', s:'2026-04-07', e:'2026-04-21' },
   { id:'trustgen',   app:'TrustGen 3D',   icon:'🎨', headline:'Creator Collective',     reward:'Bring 3 users to TrustGen',     sig:750,  mult:'2×', perk:'3D asset pack',   url:'https://trustgen.tlid.io/explore',       ac:'#f43f5e', gl:'rgba(244,63,94,0.07)',  s:'2026-04-21', e:'2026-05-05' },
   { id:'bomber',     app:'Bomber 3D',     icon:'⛳', headline:'Long Drive Challenge',   reward:'Invite players',                sig:300,  mult:'2×', perk:'Pro skin',         url:'https://bomber.tlid.io',                 ac:'#10b981', gl:'rgba(16,185,129,0.07)', s:'2026-05-05', e:'2026-05-19' },
   { id:'vault',      app:'TrustVault',    icon:'🔐', headline:'Secure the Network',     reward:'Refer friends to TrustVault',   sig:600,  mult:'2×', perk:'Vault tier',       url:'https://trustvault.tlid.io',             ac:'#06b6d4', gl:'rgba(6,182,212,0.07)',  s:'2026-05-19', e:'2026-06-02' },
-  { id:'void',       app:'THE VOID',      icon:'🕳️', headline:'Void Explorers Drive',  reward:'Bring friends to The Void',     sig:400,  mult:'2×', perk:'Void skin',        url:'https://intothevoid.app',                ac:'#8b5cf6', gl:'rgba(139,92,246,0.07)', s:'2026-06-02', e:'2026-06-16' },
+  { id:'void',       app:'THE VOID',      icon:'🕳️', headline:'Void Explorers Drive',  reward:'Bring friends to The Void',     sig:400,  mult:'2×', perk:'Void skin',        url:'https://intothevoid.app',                ac:'#0ea5e9', gl:'rgba(14,165,233,0.07)', s:'2026-06-02', e:'2026-06-16' },
   { id:'lotops',     app:'Lot Ops Pro',   icon:'🚗', headline:'Fleet Expansion Drive',  reward:'Onboard a dealership',          sig:1500, mult:'5×', perk:'Analytics pack',   url:'https://lotopspro.io',                   ac:'#f59e0b', gl:'rgba(245,158,11,0.07)', s:'2026-06-16', e:'2026-06-30' },
   { id:'lume',       app:'Lume',          icon:'💡', headline:'Language Pioneers',      reward:'Invite developers to Lume',     sig:500,  mult:'2×', perk:'Early access',     url:'https://lume-lang.org',                  ac:'#06b6d4', gl:'rgba(6,182,212,0.07)',  s:'2026-06-30', e:'2026-07-14' },
 ];
@@ -106,7 +106,7 @@ function toInitials(name: string) {
 
 const TIER_COLORS: Record<string, {bg: string, text: string, label: string}> = {
   founder:  { bg: 'rgba(245,158,11,0.12)',  text: '#fbbf24', label: '🏅 Founder'  },
-  premium:  { bg: 'rgba(139,92,246,0.12)',  text: '#c4b5fd', label: '💎 Premium'  },
+  premium:  { bg: 'rgba(14,165,233,0.12)',  text: '#c4b5fd', label: '💎 Premium'  },
   standard: { bg: 'rgba(6,182,212,0.10)',   text: '#67e8f9', label: '✓ Standard'  },
   free:     { bg: 'rgba(255,255,255,0.04)', text: 'rgba(255,255,255,0.35)', label: 'Free' },
 };
@@ -149,7 +149,7 @@ const S = {
     border: '2px solid rgba(6,182,212,0.25)',
     overflow: 'hidden' as const, flexShrink: 0, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    background: 'linear-gradient(135deg,rgba(6,182,212,0.12),rgba(139,92,246,0.08))',
+    background: 'linear-gradient(135deg,rgba(6,182,212,0.12),rgba(14,165,233,0.08))',
     boxShadow: '0 0 20px rgba(6,182,212,0.10)',
     fontSize: 18, fontWeight: 800, color: '#67e8f9',
     position: 'relative' as const,
@@ -185,7 +185,7 @@ const S = {
   idValue: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.7)', fontFamily: "'JetBrains Mono',monospace", flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const },
   copyBtn: { background: 'none', border: '1px solid rgba(6,182,212,0.2)', borderRadius: 5, padding: '1px 6px', fontSize: 9, color: '#67e8f9', cursor: 'pointer', flexShrink: 0, fontWeight: 700 },
   // Affiliate section
-  affSec: { margin: '0 14px', padding: '10px 14px', borderRadius: 12, background: 'rgba(168,85,247,0.04)', border: '1px solid rgba(168,85,247,0.08)', marginBottom: 2 },
+  affSec: { margin: '0 14px', padding: '10px 14px', borderRadius: 12, background: 'rgba(14,165,233,0.04)', border: '1px solid rgba(14,165,233,0.08)', marginBottom: 2 },
   affHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   affTier: (tier: string) => ({ fontSize: 11, fontWeight: 800, color: AFFILIATE_TIER_COLORS[tier] || '#fff' }),
   affStats: { display: 'flex', gap: 12 },
@@ -193,7 +193,7 @@ const S = {
   affStatNum: { fontSize: 15, fontWeight: 800, color: 'rgba(255,255,255,0.88)' },
   affStatLabel: { fontSize: 9, color: 'rgba(255,255,255,0.3)', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.08em' },
   affCta: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.04)' },
-  affLink: { display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 8, background: 'linear-gradient(135deg,rgba(168,85,247,0.15),rgba(6,182,212,0.10))', border: '1px solid rgba(168,85,247,0.2)', fontSize: 11, fontWeight: 700, color: '#c4b5fd', cursor: 'pointer', textDecoration: 'none' as const },
+  affLink: { display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 8, background: 'linear-gradient(135deg,rgba(14,165,233,0.15),rgba(6,182,212,0.10))', border: '1px solid rgba(14,165,233,0.2)', fontSize: 11, fontWeight: 700, color: '#c4b5fd', cursor: 'pointer', textDecoration: 'none' as const },
   // Bonus
   bonus: (b: typeof BONUSES[0]) => ({ margin: '12px 14px 0', padding: 14, borderRadius: 14, border: '1px solid rgba(6,182,212,0.10)', background: `linear-gradient(135deg,${b.gl},rgba(0,0,0,0.08))`, position: 'relative' as const, overflow: 'hidden' }),
   bLbl: (ac: string) => ({ display: 'flex', alignItems: 'center', gap: 5, fontSize: 8, fontWeight: 800, textTransform: 'uppercase' as const, letterSpacing: '0.14em', marginBottom: 8, color: ac }),
@@ -202,10 +202,10 @@ const S = {
   bRew: { fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 10, lineHeight: 1.4 },
   bStats: { display: 'flex', flexWrap: 'wrap' as const, gap: 6, marginBottom: 10 },
   bSig: { display: 'inline-flex', alignItems: 'center', gap: 3, padding: '3px 9px', borderRadius: 7, background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.15)', fontSize: 11, fontWeight: 900, color: '#67e8f9', fontFamily: "'JetBrains Mono',monospace" },
-  bMult: { display: 'inline-flex', padding: '3px 7px', borderRadius: 7, background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.2)', fontSize: 10, fontWeight: 900, color: '#c4b5fd' },
+  bMult: { display: 'inline-flex', padding: '3px 7px', borderRadius: 7, background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.2)', fontSize: 10, fontWeight: 900, color: '#c4b5fd' },
   bPerk: { display: 'inline-flex', padding: '3px 7px', borderRadius: 7, background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.15)', fontSize: 9, fontWeight: 700, color: '#6ee7b7' },
   bTimer: { fontSize: 9, color: 'rgba(255,255,255,0.2)', fontFamily: "'JetBrains Mono',monospace", marginBottom: 10 },
-  bCta: (ac: string) => ({ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', padding: isMob ? '13px 0' : '10px 0', borderRadius: 10, color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' as const, border: 'none', cursor: 'pointer', minHeight: isMob ? 48 : 42, background: `linear-gradient(135deg,${ac},#8b5cf6)` }),
+  bCta: (ac: string) => ({ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', padding: isMob ? '13px 0' : '10px 0', borderRadius: 10, color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' as const, border: 'none', cursor: 'pointer', minHeight: isMob ? 48 : 42, background: `linear-gradient(135deg,${ac},#0ea5e9)` }),
   // Wallet
   walSec: { padding: '10px 14px', borderBottom: '1px solid rgba(255,255,255,0.025)' },
   walRow: { display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', cursor: 'pointer' },
@@ -213,7 +213,7 @@ const S = {
   walTitle: { fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.72)' },
   walSub: { fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 1 },
   pill: (c: 'cyan' | 'green' | 'purple') => {
-    const m = { cyan: ['rgba(6,182,212,0.08)','rgba(6,182,212,0.15)','#67e8f9'], green: ['rgba(16,185,129,0.08)','rgba(16,185,129,0.15)','#6ee7b7'], purple: ['rgba(168,85,247,0.08)','rgba(168,85,247,0.15)','#c4b5fd'] }[c];
+    const m = { cyan: ['rgba(6,182,212,0.08)','rgba(6,182,212,0.15)','#67e8f9'], green: ['rgba(16,185,129,0.08)','rgba(16,185,129,0.15)','#6ee7b7'], purple: ['rgba(14,165,233,0.08)','rgba(14,165,233,0.15)','#c4b5fd'] }[c];
     return { padding: '2px 7px', borderRadius: 5, background: m[0], border: `1px solid ${m[1]}`, fontSize: 9, fontWeight: 800, color: m[2] };
   },
   // Section header
@@ -244,7 +244,7 @@ const S = {
   setSub: { fontSize: 10, color: 'rgba(255,255,255,0.2)', marginTop: 1 },
   // Connect screen
   conn: { flex: 1, display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', gap: 14, padding: '32px 24px', textAlign: 'center' as const },
-  connBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: isMob ? '14px 36px' : '12px 28px', borderRadius: 999, background: 'linear-gradient(135deg,#06b6d4,#8b5cf6)', color: '#fff', fontSize: isMob ? 14 : 13, fontWeight: 700, textDecoration: 'none' as const, border: 'none', cursor: 'pointer', minHeight: isMob ? 48 : 44 },
+  connBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: isMob ? '14px 36px' : '12px 28px', borderRadius: 999, background: 'linear-gradient(135deg,#06b6d4,#0ea5e9)', color: '#fff', fontSize: isMob ? 14 : 13, fontWeight: 700, textDecoration: 'none' as const, border: 'none', cursor: 'pointer', minHeight: isMob ? 48 : 44 },
   ft: { marginTop: 'auto' as const, padding: '12px 18px', borderTop: '1px solid rgba(255,255,255,0.025)', fontSize: 9, color: 'rgba(255,255,255,0.12)', textAlign: 'center' as const },
   ftL: { color: 'rgba(6,182,212,0.4)', textDecoration: 'none' as const },
 };
@@ -561,7 +561,7 @@ export function EcosystemAccountHub() {
               <div style={{ fontSize: 32, marginBottom: 12 }}>🌊</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.8)', marginBottom: 8 }}>Connect to Trust Layer</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 20, lineHeight: 1.5 }}>Sign in to access your wallet, identity, and ecosystem apps.</div>
-              <a href={`${HUB}/login`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', padding: '10px 24px', borderRadius: 10, background: 'linear-gradient(135deg,#06b6d4,#8b5cf6)', color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>Sign In</a>
+              <a href={`${HUB}/login`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', padding: '10px 24px', borderRadius: 10, background: 'linear-gradient(135deg,#06b6d4,#0ea5e9)', color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>Sign In</a>
             </div>
           )}
         </div>

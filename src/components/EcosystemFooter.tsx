@@ -9,9 +9,9 @@ interface AppEntry { id:string; v:string; n:string; i:string; u:string; hook:str
 
 const VERTICALS: Record<string,{label:string;icon:string;color:string}> = {
   core:       { label:'Core Identity',     icon:'🌊', color:'#06b6d4' },
-  language:   { label:'Language & Dev',    icon:'💡', color:'#a78bfa' },
+  language:   { label:'Language & Dev',    icon:'💡', color:'#38bdf8' },
   creative:   { label:'Creative Studio',   icon:'🎨', color:'#f43f5e' },
-  gaming:     { label:'Gaming & Social',   icon:'🎮', color:'#8b5cf6' },
+  gaming:     { label:'Gaming & Social',   icon:'🎮', color:'#0ea5e9' },
   enterprise: { label:'Enterprise & Ops',  icon:'🏢', color:'#10b981' },
   automotive: { label:'Automotive',        icon:'🚗', color:'#f59e0b' },
   lifestyle:  { label:'Lifestyle & Health',icon:'🌿', color:'#84cc16' },
