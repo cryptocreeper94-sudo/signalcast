@@ -164,7 +164,7 @@
       <p class="notify-label">Not ready yet? Get notified when SignalCast goes live.</p>
       <div class="capture">
         <input type="email" id="teaser-email" placeholder="your@email.com" autocomplete="email">
-        <button id="teaser-btn" onclick="submitEmail()">Notify Me</button>
+        <button id="teaser-btn" >Notify Me</button>
       </div>
     </div>
 
@@ -218,6 +218,7 @@
       btn.classList.add('done');
       input.value='';
     }
+    document.getElementById('teaser-btn').addEventListener('click', submitEmail);
     document.getElementById('teaser-email').addEventListener('keydown',function(e){if(e.key==='Enter')submitEmail();});
   </script>
 </body>
