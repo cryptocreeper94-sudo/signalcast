@@ -156,7 +156,7 @@ const isMob = typeof window !== 'undefined' && window.innerWidth <= 640;
 // ── Styles ─────────────────────────────────────────────────────────────────────
 const S = {
   trigger: (open: boolean) => ({
-    position: 'fixed' as const, top: 14, right: 16, zIndex: 9998,
+    position: 'fixed' as const, bottom: 80, right: 20, zIndex: 9998,
     width: 38, height: 38, borderRadius: '50%',
     border: `2px solid ${open ? '#06b6d4' : 'rgba(6,182,212,0.35)'}`,
     background: 'linear-gradient(135deg,rgba(8,10,18,0.92),rgba(8,10,18,0.92))',
